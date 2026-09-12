@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_sub_services",
+  "info": {
+    "displayName": "sub-service",
+    "icon": "connector"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 400,
+      "required": true
+    },
+    "icon": {
+      "type": "string",
+      "maxLength": 50
+    }
+  },
+  "config": {}
+}

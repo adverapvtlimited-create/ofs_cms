@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_elements_spec_rows",
+  "info": {
+    "displayName": "spec-row",
+    "icon": "crown"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "maxLength": 150,
+      "required": true
+    }
+  },
+  "config": {}
+}

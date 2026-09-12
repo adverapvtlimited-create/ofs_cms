@@ -1,0 +1,85 @@
+{
+  "kind": "collectionType",
+  "collectionName": "case_studies",
+  "info": {
+    "singularName": "case-study",
+    "pluralName": "case-studies",
+    "displayName": "case-study"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "clientIndustry": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "summary": {
+      "type": "text",
+      "maxLength": 350,
+      "required": false
+    },
+    "metrics": {
+      "type": "component",
+      "component": "shared.stat-metric",
+      "repeatable": true,
+      "required": true
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false,
+      "required": true
+    },
+    "relatedProject": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::project.project",
+      "inversedBy": "caseStudies"
+    },
+    "theChallenge": {
+      "type": "blocks",
+      "required": true
+    },
+    "theSolution": {
+      "type": "blocks",
+      "required": true
+    },
+    "theOutcome": {
+      "type": "blocks",
+      "required": true
+    }
+  }
+}

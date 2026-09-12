@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_sections_feature_grids",
+  "info": {
+    "displayName": "feature-grid"
+  },
+  "options": {},
+  "attributes": {
+    "badge": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "heading": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "columns": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "columns-2",
+        "columns-3",
+        "columns-4"
+      ]
+    },
+    "items": {
+      "type": "component",
+      "component": "sections.value-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_sections_catalog_items",
+  "info": {
+    "displayName": "catalog-item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 500,
+      "required": true
+    }
+  },
+  "config": {}
+}

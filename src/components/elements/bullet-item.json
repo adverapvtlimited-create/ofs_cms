@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_elements_bullet_items",
+  "info": {
+    "displayName": "bullet-item",
+    "icon": "write"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "maxLength": 255,
+      "required": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,54 @@
+{
+  "collectionName": "components_shared_office_locations",
+  "info": {
+    "displayName": "office-location",
+    "icon": "search"
+  },
+  "options": {},
+  "attributes": {
+    "officeName": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "companyEntity": {
+      "type": "string",
+      "maxLength": 120,
+      "required": true
+    },
+    "addressLine1": {
+      "type": "string",
+      "maxLength": 150,
+      "required": true
+    },
+    "addressLine2": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "city": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "state": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "pincode": {
+      "type": "string",
+      "maxLength": 20,
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "googleMapsUrl": {
+      "type": "string",
+      "regex": "^(https?:\\/\\/)([\\w-]+\\.)+[\\w-]+(\\/[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=%]*)?$"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,92 @@
+{
+  "kind": "collectionType",
+  "collectionName": "enquiries",
+  "info": {
+    "singularName": "enquiry",
+    "pluralName": "enquiries",
+    "displayName": "enquiry"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "formType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "General Contact",
+        "Product RFQ",
+        "Job Application"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 30,
+      "required": true
+    },
+    "company": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "message": {
+      "type": "text",
+      "minLength": 5,
+      "required": true
+    },
+    "attachedFile": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "videos",
+        "audios",
+        "files"
+      ]
+    },
+    "requestStatus": {
+      "type": "enumeration",
+      "required": true,
+      "default": "New",
+      "enum": [
+        "New",
+        "In Progress",
+        "Contacted",
+        "Resolved",
+        "Archived"
+      ]
+    },
+    "sourceUrl": {
+      "type": "string",
+      "required": false,
+      "regex": "^(https?:\\/\\/)([\\w-]+\\.)+[\\w-]+(\\/[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=%]*)?$"
+    },
+    "relatedProduct": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "enquiries"
+    },
+    "relatedService": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::service.service",
+      "inversedBy": "enquiries"
+    },
+    "relatedCareer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::career.career",
+      "inversedBy": "enquiries"
+    }
+  }
+}

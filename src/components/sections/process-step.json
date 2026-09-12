@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_sections_process_steps",
+  "info": {
+    "displayName": "process-step",
+    "icon": "crop"
+  },
+  "options": {},
+  "attributes": {
+    "stepNumber": {
+      "type": "string",
+      "maxLength": 10,
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 400,
+      "required": true
+    }
+  },
+  "config": {}
+}

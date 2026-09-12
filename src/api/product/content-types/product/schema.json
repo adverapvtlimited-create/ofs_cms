@@ -1,0 +1,108 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "product"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "shortName": {
+      "type": "string",
+      "maxLength": 60,
+      "required": true
+    },
+    "shortDescription": {
+      "type": "text",
+      "maxLength": 350,
+      "required": true
+    },
+    "mainImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "imageGallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "specSheetPdf": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "specifications": {
+      "type": "component",
+      "component": "elements.spec-row",
+      "repeatable": true
+    },
+    "features": {
+      "type": "component",
+      "component": "elements.bullet-item",
+      "repeatable": true
+    },
+    "catalogItems": {
+      "type": "component",
+      "component": "sections.catalog-item",
+      "repeatable": true
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-category.product-category",
+      "inversedBy": "products"
+    },
+    "industries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::industry.industry",
+      "inversedBy": "products"
+    },
+    "enquiries": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::enquiry.enquiry",
+      "mappedBy": "relatedProduct"
+    },
+    "overview": {
+      "type": "blocks",
+      "required": true
+    }
+  }
+}

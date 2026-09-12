@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brand_partners",
+  "info": {
+    "singularName": "brand-partner",
+    "pluralName": "brand-partners",
+    "displayName": "Brand Partner"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "websiteUrl": {
+      "type": "string",
+      "regex": "^(https?:\\/\\/)([\\w-]+\\.)+[\\w-]+(\\/[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=%]*)?$"
+    }
+  }
+}

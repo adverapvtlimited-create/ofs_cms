@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_faq_items",
+  "info": {
+    "displayName": "faq-item",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "string",
+      "maxLength": 200,
+      "required": true
+    },
+    "answer": {
+      "type": "text",
+      "required": true
+    }
+  },
+  "config": {}
+}

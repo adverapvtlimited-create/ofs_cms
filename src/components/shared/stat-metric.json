@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_shared_stat_metrics",
+  "info": {
+    "displayName": "stat-metric",
+    "icon": "chartBubble"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "maxLength": 40,
+      "required": true
+    },
+    "numeric": {
+      "type": "decimal"
+    },
+    "suffix": {
+      "type": "string",
+      "maxLength": 15
+    },
+    "subtext": {
+      "type": "string",
+      "maxLength": 150
+    }
+  },
+  "config": {}
+}

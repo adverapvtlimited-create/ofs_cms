@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_sections_hero_banners",
+  "info": {
+    "displayName": "hero-banner",
+    "icon": "information"
+  },
+  "options": {},
+  "attributes": {
+    "badge": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 150,
+      "required": true
+    },
+    "highlightText": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "subtitle": {
+      "type": "text",
+      "maxLength": 350,
+      "required": true
+    },
+    "ctaButtons": {
+      "type": "component",
+      "component": "shared.cta-button",
+      "repeatable": true
+    },
+    "backgroundMedia": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}
