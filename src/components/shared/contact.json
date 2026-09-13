@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_shared_contacts",
+  "info": {
+    "displayName": "Contact Details",
+    "icon": "phone",
+    "description": "Company contact info with global addresses"
+  },
+  "options": {},
+  "attributes": {
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "phoneRaw": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "addressIndia": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.address"
+    },
+    "addressUSA": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.address"
+    }
+  }
+}

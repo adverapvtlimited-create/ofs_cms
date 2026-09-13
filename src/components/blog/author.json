@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_blog_authors",
+  "info": {
+    "displayName": "Author",
+    "icon": "user",
+    "description": "Article author credentials"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "avatar": {
+      "type": "string"
+    }
+  }
+}

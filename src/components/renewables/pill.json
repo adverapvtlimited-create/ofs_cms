@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_renewables_pills",
+  "info": {
+    "displayName": "Renewables Pill",
+    "icon": "check",
+    "description": "Why section feature pill"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

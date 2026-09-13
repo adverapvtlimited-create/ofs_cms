@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_services_capabilities",
+  "info": {
+    "displayName": "Capability",
+    "icon": "shield",
+    "description": "Service capability point"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

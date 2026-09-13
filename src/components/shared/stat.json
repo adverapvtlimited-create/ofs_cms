@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_stats",
+  "info": {
+    "displayName": "Stat",
+    "icon": "chart-pie",
+    "description": "Statistics metric card"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "numeric": {
+      "type": "decimal"
+    },
+    "suffix": {
+      "type": "string"
+    },
+    "desc": {
+      "type": "text"
+    }
+  }
+}

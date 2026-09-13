@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_industries_related_services",
+  "info": {
+    "displayName": "Related Service",
+    "icon": "link",
+    "description": "Cross reference to a service"
+  },
+  "options": {},
+  "attributes": {
+    "slug": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    }
+  }
+}

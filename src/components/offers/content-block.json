@@ -1,0 +1,47 @@
+{
+  "collectionName": "components_offers_content_blocks",
+  "info": {
+    "displayName": "Content Block",
+    "icon": "layout",
+    "description": "Multi-column content section"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "dark",
+        "light",
+        "subtle"
+      ],
+      "default": "light"
+    },
+    "imagePosition": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "default": "right"
+    },
+    "image": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.image-with-alt"
+    },
+    "intro": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "offers.block-item"
+    },
+    "paragraphs": {
+      "type": "json"
+    }
+  }
+}

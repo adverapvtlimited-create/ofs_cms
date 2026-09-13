@@ -1,0 +1,75 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_configs",
+  "info": {
+    "singularName": "site-config",
+    "pluralName": "site-configs",
+    "displayName": "Site Config",
+    "description": "Global company profile, branding, stats and contact configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "shortName": {
+      "type": "string",
+      "required": true
+    },
+    "legalName": {
+      "type": "string"
+    },
+    "usEntityName": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string",
+      "required": true
+    },
+    "shortDesc": {
+      "type": "text",
+      "required": true
+    },
+    "headline": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "longDesc": {
+      "type": "text",
+      "required": true
+    },
+    "logo": {
+      "type": "string"
+    },
+    "logoDark": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.contact",
+      "required": true
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "socials": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.socials"
+    },
+    "certifications": {
+      "type": "json"
+    }
+  }
+}

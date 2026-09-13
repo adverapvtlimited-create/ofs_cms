@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_renewables_solutions",
+  "info": {
+    "displayName": "Renewable Solution",
+    "icon": "sun",
+    "description": "Renewable energy domain solution"
+  },
+  "options": {},
+  "attributes": {
+    "solutionId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "bullets": {
+      "type": "json"
+    }
+  }
+}

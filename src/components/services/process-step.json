@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_services_process_steps",
+  "info": {
+    "displayName": "Process Step",
+    "icon": "bullet-list",
+    "description": "Step-by-step workflow stage"
+  },
+  "options": {},
+  "attributes": {
+    "step": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "desc": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

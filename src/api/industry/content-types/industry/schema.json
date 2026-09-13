@@ -4,80 +4,66 @@
   "info": {
     "singularName": "industry",
     "pluralName": "industries",
-    "displayName": "industry"
+    "displayName": "Industry",
+    "description": "Target industry sectors and sub-industry verticals"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "industryId": {
       "type": "string",
       "required": true,
       "unique": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "title",
+      "targetField": "name",
+      "required": true
+    },
+    "name": {
+      "type": "string",
       "required": true
     },
     "shortName": {
       "type": "string",
-      "maxLength": 60,
       "required": true
+    },
+    "icon": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "string"
+    },
+    "relatedService": {
+      "type": "component",
+      "repeatable": false,
+      "component": "industries.related-service"
     },
     "tagline": {
       "type": "string",
-      "maxLength": 150
+      "required": true
     },
-    "heroImage": {
-      "type": "media",
-      "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+    "summary": {
+      "type": "text",
+      "required": true
     },
     "keySolutions": {
+      "type": "json"
+    },
+    "subIndustries": {
       "type": "component",
-      "component": "elements.bullet-item",
-      "repeatable": true
+      "repeatable": true,
+      "component": "industries.sub-industry"
+    },
+    "fullContentText": {
+      "type": "text"
     },
     "seo": {
       "type": "component",
-      "component": "shared.seo",
-      "repeatable": false
-    },
-    "projects": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::project.project",
-      "mappedBy": "industryTag"
-    },
-    "featuredProjects": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::project.project",
-      "mappedBy": "industries"
-    },
-    "products": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::product.product",
-      "mappedBy": "industries"
-    },
-    "services": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::service.service",
-      "mappedBy": "relatedIndustries"
-    },
-    "description": {
-      "type": "blocks",
-      "required": true
+      "repeatable": false,
+      "component": "shared.seo"
     }
   }
 }

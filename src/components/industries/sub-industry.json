@@ -1,0 +1,43 @@
+{
+  "collectionName": "components_industries_sub_industries",
+  "info": {
+    "displayName": "Sub Industry",
+    "icon": "layer",
+    "description": "Sector specialization under an industry"
+  },
+  "options": {},
+  "attributes": {
+    "subId": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "shortName": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "keySolutions": {
+      "type": "json"
+    },
+    "fullContentText": {
+      "type": "text"
+    }
+  }
+}

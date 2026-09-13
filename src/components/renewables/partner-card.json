@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_renewables_partner_cards",
+  "info": {
+    "displayName": "Partner Card",
+    "icon": "handshake",
+    "description": "Partner audience card"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "desc": {
+      "type": "text",
+      "required": true
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

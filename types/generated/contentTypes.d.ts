@@ -480,227 +480,44 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiBlogAuthorBlogAuthor extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_authors';
+export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
+  collectionName: 'blog_posts';
   info: {
-    displayName: 'blog-author ';
-    pluralName: 'blog-authors';
-    singularName: 'blog-author';
+    description: 'Industry insights, technical whitepapers, and corporate articles';
+    displayName: 'Blog Post';
+    pluralName: 'blog-posts';
+    singularName: 'blog-post';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    avatar: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    bio: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::blog-author.blog-author'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    publishedAt: Schema.Attribute.DateTime;
-    role: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiBlogCategoryBlogCategory
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_categories';
-  info: {
-    displayName: 'blog-category';
-    pluralName: 'blog-categories';
-    singularName: 'blog-category';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::blog-category.blog-category'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
-  collectionName: 'blogs';
-  info: {
-    displayName: 'blog';
-    pluralName: 'blogs';
-    singularName: 'blog';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    author: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::blog-author.blog-author'
-    > &
+    author: Schema.Attribute.Component<'blog.author', false> &
       Schema.Attribute.Required;
-    category: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::blog-category.blog-category'
-    > &
-      Schema.Attribute.Required;
-    content: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    category: Schema.Attribute.String & Schema.Attribute.Required;
+    content: Schema.Attribute.Text & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    excerpt: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
+    date: Schema.Attribute.String & Schema.Attribute.Required;
+    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    heroImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    publishedDate: Schema.Attribute.Date & Schema.Attribute.Required;
-    readTime: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 30;
-      }>;
-    seo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiBrandPartnerBrandPartner
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'brand_partners';
-  info: {
-    displayName: 'Brand Partner';
-    pluralName: 'brand-partners';
-    singularName: 'brand-partner';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
+    image: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::brand-partner.brand-partner'
+      'api::blog-post.blog-post'
     > &
       Schema.Attribute.Private;
-    logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
-      Schema.Attribute.Required;
-    name: Schema.Attribute.String &
+    postId: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    websiteUrl: Schema.Attribute.String;
-  };
-}
-
-export interface ApiCareerCareer extends Struct.CollectionTypeSchema {
-  collectionName: 'careers';
-  info: {
-    displayName: 'career';
-    pluralName: 'careers';
-    singularName: 'career';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    benefits: Schema.Attribute.Component<'elements.bullet-item', true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    datePosted: Schema.Attribute.Date & Schema.Attribute.Required;
-    department: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 80;
-      }>;
-    description: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    employmentType: Schema.Attribute.Enumeration<
-      ['Full-Time', 'Part-Time', 'Contract']
-    > &
-      Schema.Attribute.Required;
-    enquiries: Schema.Attribute.Relation<'oneToMany', 'api::enquiry.enquiry'>;
-    experienceRequired: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }>;
-    isActive: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>;
-    jobTitle: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 120;
-      }>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::career.career'
-    > &
-      Schema.Attribute.Private;
-    location: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
-    publishedAt: Schema.Attribute.DateTime;
-    requirements: Schema.Attribute.Component<'elements.bullet-item', true>;
-    responsibilities: Schema.Attribute.Component<'elements.bullet-item', true>;
+    readTime: Schema.Attribute.String;
     seo: Schema.Attribute.Component<'shared.seo', false>;
-    slug: Schema.Attribute.UID<'jobTitle'> & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    tags: Schema.Attribute.JSON;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -710,7 +527,8 @@ export interface ApiCareerCareer extends Struct.CollectionTypeSchema {
 export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
   collectionName: 'case_studies';
   info: {
-    displayName: 'case-study';
+    description: 'Real-world project execution studies and emergency mobilizations';
+    displayName: 'Case Study';
     pluralName: 'case-studies';
     singularName: 'case-study';
   };
@@ -718,53 +536,31 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    badge: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }>;
-    clientIndustry: Schema.Attribute.String &
+    badge: Schema.Attribute.String;
+    caseStudyId: Schema.Attribute.String &
       Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
+      Schema.Attribute.Unique;
+    challenge: Schema.Attribute.Text & Schema.Attribute.Required;
+    clientIndustry: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    heroImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
+    duration: Schema.Attribute.String;
+    heroImage: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::case-study.case-study'
     > &
       Schema.Attribute.Private;
-    location: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    metrics: Schema.Attribute.Component<'shared.stat-metric', true> &
-      Schema.Attribute.Required;
+    location: Schema.Attribute.String & Schema.Attribute.Required;
+    metrics: Schema.Attribute.Component<'shared.stat-metric', true>;
     publishedAt: Schema.Attribute.DateTime;
-    relatedProject: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::project.project'
-    >;
-    seo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    summary: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 350;
-      }>;
-    theChallenge: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    theOutcome: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    theSolution: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    solution: Schema.Attribute.Text & Schema.Attribute.Required;
+    summary: Schema.Attribute.Text & Schema.Attribute.Required;
+    tags: Schema.Attribute.JSON;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -774,118 +570,65 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
 export interface ApiEnquiryEnquiry extends Struct.CollectionTypeSchema {
   collectionName: 'enquiries';
   info: {
-    displayName: 'enquiry';
+    description: 'Customer contact form and RFQ submissions';
+    displayName: 'Enquiry';
     pluralName: 'enquiries';
     singularName: 'enquiry';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    attachedFile: Schema.Attribute.Media<
-      'images' | 'videos' | 'audios' | 'files'
-    >;
-    company: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
+    attachedFile: Schema.Attribute.String;
+    company: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     email: Schema.Attribute.Email & Schema.Attribute.Required;
-    formType: Schema.Attribute.Enumeration<
-      ['General Contact', 'Product RFQ', 'Job Application']
-    > &
-      Schema.Attribute.Required;
+    formType: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::enquiry.enquiry'
     > &
       Schema.Attribute.Private;
-    message: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        minLength: 5;
-      }>;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    phone: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 30;
-      }>;
+    message: Schema.Attribute.Text & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    relatedCareer: Schema.Attribute.Relation<'manyToOne', 'api::career.career'>;
-    relatedProduct: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::product.product'
-    >;
-    relatedService: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::service.service'
-    >;
     requestStatus: Schema.Attribute.Enumeration<
       ['New', 'In Progress', 'Contacted', 'Resolved', 'Archived']
     > &
-      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
     sourceUrl: Schema.Attribute.String;
+    subjectOrRole: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
-  collectionName: 'global_settings';
+export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
+  collectionName: 'faqs';
   info: {
-    displayName: 'global-setting';
-    pluralName: 'global-settings';
-    singularName: 'global-setting';
+    description: 'Frequently asked questions';
+    displayName: 'FAQ';
+    pluralName: 'faqs';
+    singularName: 'faq';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    companyName: Schema.Attribute.String & Schema.Attribute.Required;
-    contactEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    answer: Schema.Attribute.Text & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    defaultSeo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    globalStats: Schema.Attribute.Component<'shared.stat-metric', true> &
-      Schema.Attribute.Required;
-    helplineNumber: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 30;
-      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::global-setting.global-setting'
-    > &
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'> &
       Schema.Attribute.Private;
-    logoDark: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
-      Schema.Attribute.Required;
-    logoLight: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    officeLocations: Schema.Attribute.Component<
-      'shared.office-location',
-      true
-    > &
-      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    shortName: Schema.Attribute.String & Schema.Attribute.Required;
-    socialLinks: Schema.Attribute.Component<'shared.social-link', true>;
-    tagline: Schema.Attribute.String & Schema.Attribute.Required;
+    question: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -895,7 +638,8 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
 export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
   collectionName: 'industries';
   info: {
-    displayName: 'industry';
+    description: 'Target industry sectors and sub-industry verticals';
+    displayName: 'Industry';
     pluralName: 'industries';
     singularName: 'industry';
   };
@@ -906,130 +650,106 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    featuredProjects: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::project.project'
-    >;
-    heroImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    keySolutions: Schema.Attribute.Component<'elements.bullet-item', true>;
+    fullContentText: Schema.Attribute.Text;
+    heroImage: Schema.Attribute.String;
+    icon: Schema.Attribute.String;
+    industryId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    keySolutions: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::industry.industry'
     > &
       Schema.Attribute.Private;
-    products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
-    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    relatedService: Schema.Attribute.Component<
+      'industries.related-service',
+      false
+    >;
     seo: Schema.Attribute.Component<'shared.seo', false>;
-    services: Schema.Attribute.Relation<'manyToMany', 'api::service.service'>;
-    shortName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60;
-      }>;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tagline: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 150;
-      }>;
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiPagePage extends Struct.CollectionTypeSchema {
-  collectionName: 'pages';
-  info: {
-    displayName: 'page';
-    pluralName: 'pages';
-    singularName: 'page';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    isHomePage: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> &
-      Schema.Attribute.Private;
-    pageBuilder: Schema.Attribute.DynamicZone<
-      [
-        'sections.value-card',
-        'sections.sub-service',
-        'sections.process-step',
-        'sections.hero-banner',
-        'sections.feature-grid',
-        'sections.catalog-item',
-      ]
-    > &
-      Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiProductCategoryProductCategory
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'product_categories';
-  info: {
-    displayName: 'product-category';
-    pluralName: 'product-categories';
-    singularName: 'product-category';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    categoryImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::product-category.product-category'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    parent_category: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::product-category.product-category'
-    >;
-    product_categories: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::product-category.product-category'
-    >;
-    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
-    publishedAt: Schema.Attribute.DateTime;
+    shortName: Schema.Attribute.String & Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    subIndustries: Schema.Attribute.Component<'industries.sub-industry', true>;
+    summary: Schema.Attribute.Text & Schema.Attribute.Required;
+    tagline: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiJobJob extends Struct.CollectionTypeSchema {
+  collectionName: 'jobs';
+  info: {
+    description: 'Career opportunities and open job listings';
+    displayName: 'Job';
+    pluralName: 'jobs';
+    singularName: 'job';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    benefits: Schema.Attribute.JSON;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    department: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    experience: Schema.Attribute.String & Schema.Attribute.Required;
+    jobId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::job.job'> &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String & Schema.Attribute.Required;
+    postedDate: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    requirements: Schema.Attribute.JSON;
+    responsibilities: Schema.Attribute.JSON;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOfferOffer extends Struct.CollectionTypeSchema {
+  collectionName: 'offers';
+  info: {
+    description: 'Targeted solution and service offers';
+    displayName: 'Offer';
+    pluralName: 'offers';
+    singularName: 'offer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    blocks: Schema.Attribute.Component<'offers.content-block', true>;
+    category: Schema.Attribute.String & Schema.Attribute.Required;
+    categoryLabel: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    heroImage: Schema.Attribute.String;
+    href: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::offer.offer'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'> &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    tagline: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1039,7 +759,8 @@ export interface ApiProductCategoryProductCategory
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   collectionName: 'products';
   info: {
-    displayName: 'product';
+    description: 'Industrial products, machinery, spares, and equipment catalogs';
+    displayName: 'Product';
     pluralName: 'products';
     singularName: 'product';
   };
@@ -1047,127 +768,96 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    catalogItems: Schema.Attribute.Component<'sections.catalog-item', true>;
-    category: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::product-category.product-category'
-    >;
+    catalogItems: Schema.Attribute.Component<'products.catalog-item', true>;
+    category: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    enquiries: Schema.Attribute.Relation<'oneToMany', 'api::enquiry.enquiry'>;
-    features: Schema.Attribute.Component<'elements.bullet-item', true>;
-    imageGallery: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    industries: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::industry.industry'
-    >;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    heroImage: Schema.Attribute.String;
+    icon: Schema.Attribute.String;
+    keyPoints: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::product.product'
     > &
       Schema.Attribute.Private;
-    mainImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    overview: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
-    shortDescription: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 350;
-      }>;
-    shortName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60;
-      }>;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    specifications: Schema.Attribute.Component<'elements.spec-row', true>;
-    specSheetPdf: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
-    title: Schema.Attribute.String &
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    productId: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    shortName: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    summary: Schema.Attribute.Text & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiProjectProject extends Struct.CollectionTypeSchema {
-  collectionName: 'projects';
+export interface ApiRenewableRenewable extends Struct.SingleTypeSchema {
+  collectionName: 'renewables_pages';
   info: {
-    displayName: 'project';
-    pluralName: 'projects';
-    singularName: 'project';
+    description: 'OFS Clean Energy & Renewables division page content';
+    displayName: 'Renewables';
+    pluralName: 'renewables';
+    singularName: 'renewable';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    caseStudies: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::case-study.case-study'
-    >;
-    clientName: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    completionDate: Schema.Attribute.Date;
+    approachSteps: Schema.Attribute.Component<'renewables.step', true>;
+    approachSubtitle: Schema.Attribute.String;
+    approachTag: Schema.Attribute.String;
+    approachTitle: Schema.Attribute.String;
+    contactEmail: Schema.Attribute.Email & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    industries: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::industry.industry'
-    >;
-    industryTag: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::industry.industry'
-    >;
+    ctaDesc: Schema.Attribute.Text;
+    ctaTag: Schema.Attribute.String;
+    ctaTitle: Schema.Attribute.String;
+    heroBacking: Schema.Attribute.String;
+    heroBgImage: Schema.Attribute.String;
+    heroDescription: Schema.Attribute.Text & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::project.project'
+      'api::renewable.renewable'
     > &
       Schema.Attribute.Private;
-    location: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    mainCoverImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    projectName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    partnerBgImage: Schema.Attribute.String;
+    partnerCards: Schema.Attribute.Component<'renewables.partner-card', true>;
+    partnerDesc: Schema.Attribute.Text;
+    partnerTag: Schema.Attribute.String;
+    partnerTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    scopeOfWork: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    sitePhotos: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    slug: Schema.Attribute.UID<'projectName'> & Schema.Attribute.Required;
+    solutions: Schema.Attribute.Component<'renewables.solution', true>;
+    solutionsDesc: Schema.Attribute.Text;
+    solutionsTag: Schema.Attribute.String;
+    solutionsTitle: Schema.Attribute.String;
+    tagline: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    whyDesc: Schema.Attribute.Text;
+    whyImage: Schema.Attribute.String;
+    whyPills: Schema.Attribute.Component<'renewables.pill', true>;
+    whyTag: Schema.Attribute.String;
+    whyTitle: Schema.Attribute.String;
   };
 }
 
 export interface ApiServiceService extends Struct.CollectionTypeSchema {
   collectionName: 'services';
   info: {
-    displayName: 'service';
+    description: 'Industrial procurement, engineering, MRO, and logistics services';
+    displayName: 'Service';
     pluralName: 'services';
     singularName: 'service';
   };
@@ -1175,86 +865,81 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    badge: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 40;
-      }>;
+    badge: Schema.Attribute.String;
+    capabilities: Schema.Attribute.Component<'services.capability', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    enquiries: Schema.Attribute.Relation<'oneToMany', 'api::enquiry.enquiry'>;
-    features: Schema.Attribute.Component<'elements.bullet-item', true>;
-    heroImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
-    icon: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }>;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    faqs: Schema.Attribute.Component<'shared.faq-item', true>;
+    features: Schema.Attribute.JSON;
+    fullContentText: Schema.Attribute.Text;
+    heroImage: Schema.Attribute.String;
+    icon: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::service.service'
     > &
       Schema.Attribute.Private;
-    offeringType: Schema.Attribute.Enumeration<
-      ['Service', 'Solution', 'Expertise', 'Discipline']
-    > &
-      Schema.Attribute.Required;
-    overview: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    process: Schema.Attribute.Component<'sections.process-step', true>;
+    process: Schema.Attribute.Component<'services.process-step', true>;
     publishedAt: Schema.Attribute.DateTime;
-    relatedIndustries: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::industry.industry'
-    >;
-    seo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    shortTitle: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60;
-      }>;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    subServices: Schema.Attribute.Component<'sections.sub-service', true>;
-    tagline: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 150;
-      }>;
-    title: Schema.Attribute.String &
+    scrapedImages: Schema.Attribute.JSON;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    serviceId: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    shortTitle: Schema.Attribute.String;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    tagline: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiSharedShared extends Struct.CollectionTypeSchema {
-  collectionName: 'shareds';
+export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
+  collectionName: 'site_configs';
   info: {
-    displayName: 'shared';
-    pluralName: 'shareds';
-    singularName: 'shared';
+    description: 'Global company profile, branding, stats and contact configuration';
+    displayName: 'Site Config';
+    pluralName: 'site-configs';
+    singularName: 'site-config';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
+    certifications: Schema.Attribute.JSON;
+    contact: Schema.Attribute.Component<'shared.contact', false> &
+      Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    headline: Schema.Attribute.String & Schema.Attribute.Required;
+    legalName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::shared.shared'
+      'api::site-config.site-config'
     > &
       Schema.Attribute.Private;
+    logo: Schema.Attribute.String;
+    logoDark: Schema.Attribute.String;
+    longDesc: Schema.Attribute.Text & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    shortDesc: Schema.Attribute.Text & Schema.Attribute.Required;
+    shortName: Schema.Attribute.String & Schema.Attribute.Required;
+    socials: Schema.Attribute.Component<'shared.socials', false>;
+    stats: Schema.Attribute.Component<'shared.stat', true>;
+    tagline: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    usEntityName: Schema.Attribute.String;
   };
 }
 
@@ -1770,21 +1455,17 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::blog-author.blog-author': ApiBlogAuthorBlogAuthor;
-      'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
-      'api::blog.blog': ApiBlogBlog;
-      'api::brand-partner.brand-partner': ApiBrandPartnerBrandPartner;
-      'api::career.career': ApiCareerCareer;
+      'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::case-study.case-study': ApiCaseStudyCaseStudy;
       'api::enquiry.enquiry': ApiEnquiryEnquiry;
-      'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
+      'api::faq.faq': ApiFaqFaq;
       'api::industry.industry': ApiIndustryIndustry;
-      'api::page.page': ApiPagePage;
-      'api::product-category.product-category': ApiProductCategoryProductCategory;
+      'api::job.job': ApiJobJob;
+      'api::offer.offer': ApiOfferOffer;
       'api::product.product': ApiProductProduct;
-      'api::project.project': ApiProjectProject;
+      'api::renewable.renewable': ApiRenewableRenewable;
       'api::service.service': ApiServiceService;
-      'api::shared.shared': ApiSharedShared;
+      'api::site-config.site-config': ApiSiteConfigSiteConfig;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

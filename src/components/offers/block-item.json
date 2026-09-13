@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_offers_block_items",
+  "info": {
+    "displayName": "Block Item",
+    "icon": "bullet-list",
+    "description": "Item with title and description within a block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_products_catalog_items",
+  "info": {
+    "displayName": "Catalog Item",
+    "icon": "shopping-cart",
+    "description": "Product catalog item details"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

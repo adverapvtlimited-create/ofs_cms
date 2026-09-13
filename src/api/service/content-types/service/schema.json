@@ -4,14 +4,15 @@
   "info": {
     "singularName": "service",
     "pluralName": "services",
-    "displayName": "service"
+    "displayName": "Service",
+    "description": "Industrial procurement, engineering, MRO, and logistics services"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "serviceId": {
       "type": "string",
       "required": true,
       "unique": true
@@ -21,81 +22,58 @@
       "targetField": "title",
       "required": true
     },
-    "offeringType": {
-      "type": "enumeration",
-      "required": true,
-      "enum": [
-        "Service",
-        "Solution",
-        "Expertise",
-        "Discipline"
-      ]
+    "title": {
+      "type": "string",
+      "required": true
     },
     "shortTitle": {
-      "type": "string",
-      "maxLength": 60,
-      "required": false
+      "type": "string"
     },
     "badge": {
-      "type": "string",
-      "maxLength": 40
-    },
-    "heroImage": {
-      "type": "media",
-      "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "type": "string"
     },
     "icon": {
-      "type": "string",
-      "maxLength": 50
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "string"
     },
     "tagline": {
       "type": "string",
-      "maxLength": 150,
+      "required": true
+    },
+    "description": {
+      "type": "text",
       "required": true
     },
     "features": {
-      "type": "component",
-      "component": "elements.bullet-item",
-      "repeatable": true
+      "type": "json"
     },
-    "subServices": {
+    "capabilities": {
       "type": "component",
-      "component": "sections.sub-service",
-      "repeatable": true
+      "repeatable": true,
+      "component": "services.capability"
     },
     "process": {
       "type": "component",
-      "component": "sections.process-step",
-      "repeatable": true
+      "repeatable": true,
+      "component": "services.process-step"
+    },
+    "faqs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq-item"
+    },
+    "fullContentText": {
+      "type": "text"
+    },
+    "scrapedImages": {
+      "type": "json"
     },
     "seo": {
       "type": "component",
-      "component": "shared.seo",
       "repeatable": false,
-      "required": true
-    },
-    "relatedIndustries": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::industry.industry",
-      "inversedBy": "services"
-    },
-    "enquiries": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::enquiry.enquiry",
-      "mappedBy": "relatedService"
-    },
-    "overview": {
-      "type": "blocks",
-      "required": true
+      "component": "shared.seo"
     }
   }
 }

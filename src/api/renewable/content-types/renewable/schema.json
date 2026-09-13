@@ -1,0 +1,109 @@
+{
+  "kind": "singleType",
+  "collectionName": "renewables_pages",
+  "info": {
+    "singularName": "renewable",
+    "pluralName": "renewables",
+    "displayName": "Renewables",
+    "description": "OFS Clean Energy & Renewables division page content"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string",
+      "required": true
+    },
+    "heroDescription": {
+      "type": "text",
+      "required": true
+    },
+    "heroBacking": {
+      "type": "string"
+    },
+    "heroBgImage": {
+      "type": "string"
+    },
+    "solutionsTag": {
+      "type": "string"
+    },
+    "solutionsTitle": {
+      "type": "string"
+    },
+    "solutionsDesc": {
+      "type": "text"
+    },
+    "solutions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "renewables.solution"
+    },
+    "whyTag": {
+      "type": "string"
+    },
+    "whyTitle": {
+      "type": "string"
+    },
+    "whyDesc": {
+      "type": "text"
+    },
+    "whyImage": {
+      "type": "string"
+    },
+    "whyPills": {
+      "type": "component",
+      "repeatable": true,
+      "component": "renewables.pill"
+    },
+    "approachTag": {
+      "type": "string"
+    },
+    "approachTitle": {
+      "type": "string"
+    },
+    "approachSubtitle": {
+      "type": "string"
+    },
+    "approachSteps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "renewables.step"
+    },
+    "partnerTag": {
+      "type": "string"
+    },
+    "partnerTitle": {
+      "type": "string"
+    },
+    "partnerDesc": {
+      "type": "text"
+    },
+    "partnerBgImage": {
+      "type": "string"
+    },
+    "partnerCards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "renewables.partner-card"
+    },
+    "ctaTag": {
+      "type": "string"
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaDesc": {
+      "type": "text"
+    },
+    "contactEmail": {
+      "type": "email",
+      "required": true
+    }
+  }
+}
