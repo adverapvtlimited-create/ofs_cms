@@ -35,20 +35,6 @@
         "images"
       ]
     },
-    "solutionsTag": {
-      "type": "string"
-    },
-    "solutionsTitle": {
-      "type": "string"
-    },
-    "solutionsDesc": {
-      "type": "text"
-    },
-    "solutions": {
-      "type": "component",
-      "repeatable": true,
-      "component": "renewables.solution"
-    },
     "whyTag": {
       "type": "string"
     },
@@ -119,6 +105,20 @@
     "contactEmail": {
       "type": "email",
       "required": true
+    },
+    "solutionsTag": {
+      "type": "string"
+    },
+    "solutionsTitle": {
+      "type": "string"
+    },
+    "solutionsDesc": {
+      "type": "text"
+    },
+    "solutions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "renewables.solution"
     }
   }
 }

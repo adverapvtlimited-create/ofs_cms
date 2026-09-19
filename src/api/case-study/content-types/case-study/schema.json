@@ -1,3 +1,4 @@
+
 {
   "kind": "collectionType",
   "collectionName": "case_studies",
@@ -55,13 +56,13 @@
       "type": "text",
       "required": true
     },
+    "tags": {
+      "type": "json"
+    },
     "metrics": {
       "type": "component",
       "repeatable": true,
       "component": "shared.stat-metric"
-    },
-    "tags": {
-      "type": "json"
     },
     "seo": {
       "type": "component",

@@ -26,22 +26,8 @@
       "type": "string",
       "required": true
     },
-    "excerpt": {
-      "type": "text",
-      "required": true
-    },
-    "content": {
-      "type": "text",
-      "required": true
-    },
     "category": {
       "type": "string",
-      "required": true
-    },
-    "author": {
-      "type": "component",
-      "repeatable": false,
-      "component": "blog.author",
       "required": true
     },
     "date": {
@@ -63,8 +49,22 @@
         "images"
       ]
     },
+    "excerpt": {
+      "type": "text",
+      "required": true
+    },
+    "content": {
+      "type": "text",
+      "required": true
+    },
     "tags": {
       "type": "json"
+    },
+    "author": {
+      "type": "component",
+      "repeatable": false,
+      "component": "blog.author",
+      "required": true
     },
     "seo": {
       "type": "component",
