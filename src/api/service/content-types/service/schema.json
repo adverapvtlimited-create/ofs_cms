@@ -36,7 +36,12 @@
       "type": "string"
     },
     "heroImage": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "tagline": {
       "type": "string",
@@ -68,7 +73,12 @@
       "type": "text"
     },
     "scrapedImages": {
-      "type": "json"
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "seo": {
       "type": "component",

@@ -36,7 +36,12 @@
       "type": "string"
     },
     "heroImage": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "summary": {
       "type": "text",

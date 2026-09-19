@@ -28,7 +28,12 @@
       "type": "string"
     },
     "heroBgImage": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "solutionsTag": {
       "type": "string"
@@ -54,7 +59,12 @@
       "type": "text"
     },
     "whyImage": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "whyPills": {
       "type": "component",
@@ -85,7 +95,12 @@
       "type": "text"
     },
     "partnerBgImage": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "partnerCards": {
       "type": "component",

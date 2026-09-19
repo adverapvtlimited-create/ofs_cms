@@ -8,8 +8,12 @@
   "options": {},
   "attributes": {
     "src": {
-      "type": "string",
-      "required": true
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "alt": {
       "type": "string"

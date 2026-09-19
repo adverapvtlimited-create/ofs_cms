@@ -8,7 +8,7 @@ export interface BlogAuthor extends Struct.ComponentSchema {
     icon: 'user';
   };
   attributes: {
-    avatar: Schema.Attribute.String;
+    avatar: Schema.Attribute.Media<'images'>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     role: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -71,7 +71,7 @@ export interface IndustriesSubIndustry extends Struct.ComponentSchema {
   };
   attributes: {
     fullContentText: Schema.Attribute.Text;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
     keySolutions: Schema.Attribute.JSON;
     name: Schema.Attribute.String & Schema.Attribute.Required;
@@ -125,7 +125,7 @@ export interface ProductsCatalogItem extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text & Schema.Attribute.Required;
-    image: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -167,7 +167,7 @@ export interface RenewablesSolution extends Struct.ComponentSchema {
   attributes: {
     bullets: Schema.Attribute.JSON;
     icon: Schema.Attribute.String;
-    image: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
     solutionId: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -438,7 +438,7 @@ export interface SharedImageWithAlt extends Struct.ComponentSchema {
   };
   attributes: {
     alt: Schema.Attribute.String;
-    src: Schema.Attribute.String & Schema.Attribute.Required;
+    src: Schema.Attribute.Media<'images'>;
   };
 }
 

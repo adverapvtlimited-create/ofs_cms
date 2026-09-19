@@ -56,7 +56,12 @@
       "default": false
     },
     "image": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "tags": {
       "type": "json"

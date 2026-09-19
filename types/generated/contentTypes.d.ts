@@ -502,7 +502,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     date: Schema.Attribute.String & Schema.Attribute.Required;
     excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    image: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -546,7 +546,7 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     duration: Schema.Attribute.String;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -651,7 +651,7 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     fullContentText: Schema.Attribute.Text;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
     industryId: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -739,7 +739,7 @@ export interface ApiOfferOffer extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     href: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::offer.offer'> &
@@ -774,7 +774,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
     keyPoints: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -822,7 +822,7 @@ export interface ApiRenewableRenewable extends Struct.SingleTypeSchema {
     ctaTag: Schema.Attribute.String;
     ctaTitle: Schema.Attribute.String;
     heroBacking: Schema.Attribute.String;
-    heroBgImage: Schema.Attribute.String;
+    heroBgImage: Schema.Attribute.Media<'images'>;
     heroDescription: Schema.Attribute.Text & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -830,7 +830,7 @@ export interface ApiRenewableRenewable extends Struct.SingleTypeSchema {
       'api::renewable.renewable'
     > &
       Schema.Attribute.Private;
-    partnerBgImage: Schema.Attribute.String;
+    partnerBgImage: Schema.Attribute.Media<'images'>;
     partnerCards: Schema.Attribute.Component<'renewables.partner-card', true>;
     partnerDesc: Schema.Attribute.Text;
     partnerTag: Schema.Attribute.String;
@@ -846,7 +846,7 @@ export interface ApiRenewableRenewable extends Struct.SingleTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     whyDesc: Schema.Attribute.Text;
-    whyImage: Schema.Attribute.String;
+    whyImage: Schema.Attribute.Media<'images'>;
     whyPills: Schema.Attribute.Component<'renewables.pill', true>;
     whyTag: Schema.Attribute.String;
     whyTitle: Schema.Attribute.String;
@@ -874,7 +874,7 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     faqs: Schema.Attribute.Component<'shared.faq-item', true>;
     features: Schema.Attribute.JSON;
     fullContentText: Schema.Attribute.Text;
-    heroImage: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -884,7 +884,7 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     process: Schema.Attribute.Component<'services.process-step', true>;
     publishedAt: Schema.Attribute.DateTime;
-    scrapedImages: Schema.Attribute.JSON;
+    scrapedImages: Schema.Attribute.Media<'images', true>;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     serviceId: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -919,6 +919,7 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     headline: Schema.Attribute.String & Schema.Attribute.Required;
+    heroImage: Schema.Attribute.Media<'images'>;
     legalName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -926,8 +927,8 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
       'api::site-config.site-config'
     > &
       Schema.Attribute.Private;
-    logo: Schema.Attribute.String;
-    logoDark: Schema.Attribute.String;
+    logo: Schema.Attribute.Media<'images'>;
+    logoDark: Schema.Attribute.Media<'images'>;
     longDesc: Schema.Attribute.Text & Schema.Attribute.Required;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
