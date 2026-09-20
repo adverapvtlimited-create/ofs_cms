@@ -11,6 +11,7 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "seed": "node scripts/seed.js",
+    "sync:json": "node scripts/sync-strapi-to-json.js",
     "layout:fix": "node scripts/configure-content-manager-layouts.js",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",

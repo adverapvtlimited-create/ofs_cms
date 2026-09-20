@@ -224,6 +224,7 @@ async function syncIndustries(strapi) {
           populate: '*',
         },
         seo: true,
+        relatedService: true,
       },
       limit: 100,
     });
@@ -244,10 +245,12 @@ async function syncIndustries(strapi) {
           (i) => i.slug === item.slug || i.id === item.industryId || i.id === item.slug
         ) || {};
 
-      const strapiSubIndustries = Array.isArray(item.subIndustries) ? item.subIndustries : [];
+      const strapiSubIndustries = Array.isArray(item.subIndustries) ? item.subIndustries : null;
       const existingSubIndustries = Array.isArray(existingMatch.subIndustries)
         ? existingMatch.subIndustries
         : [];
+
+      const targetSubIndustries = strapiSubIndustries !== null ? strapiSubIndustries : existingSubIndustries;
 
       return {
         id: item.industryId || item.id || item.slug,
@@ -257,20 +260,17 @@ async function syncIndustries(strapi) {
         icon: item.icon || existingMatch.icon || 'Flame',
         heroImage:
           resolveMediaUrl(item.heroImage) ||
-          item.heroImage ||
+          (typeof item.heroImage === 'string' && item.heroImage.startsWith('/') ? item.heroImage : null) ||
           existingMatch.heroImage ||
           '/images/live/oil-gas-new.jpg',
-        relatedService: item.relatedService || existingMatch.relatedService || null,
+        relatedService: item.relatedService !== undefined ? item.relatedService : (existingMatch.relatedService || null),
         tagline: item.tagline || existingMatch.tagline || '',
         summary: item.summary || existingMatch.summary || '',
-        keySolutions: item.keySolutions || existingMatch.keySolutions || [],
-        subIndustries: (strapiSubIndustries.length > 0
-          ? strapiSubIndustries
-          : existingSubIndustries
-        ).map((sub, idx) => {
+        keySolutions: item.keySolutions !== undefined ? item.keySolutions : (existingMatch.keySolutions || []),
+        subIndustries: targetSubIndustries.map((sub, idx) => {
           const existingSub =
+            existingSubIndustries.find((s) => s.slug === sub.slug || s.id === sub.subId) ||
             existingSubIndustries[idx] ||
-            existingSubIndustries.find((s) => s.slug === sub.slug || s.name === sub.name) ||
             {};
           return {
             id: sub.subId || sub.id || sub.slug || existingSub.id,
@@ -280,7 +280,7 @@ async function syncIndustries(strapi) {
             icon: sub.icon || existingSub.icon || 'Flame',
             heroImage:
               resolveMediaUrl(sub.heroImage) ||
-              sub.heroImage ||
+              (typeof sub.heroImage === 'string' && sub.heroImage.startsWith('/') ? sub.heroImage : null) ||
               existingSub.heroImage ||
               '/images/live/Excellence-tools-official.png',
             tagline: sub.tagline || existingSub.tagline || '',
@@ -289,7 +289,10 @@ async function syncIndustries(strapi) {
             fullContentText: sub.fullContentText || existingSub.fullContentText || '',
           };
         }),
-        fullContentText: item.fullContentText || existingMatch.fullContentText || '',
+        fullContentText: item.fullContentText !== undefined ? item.fullContentText : (existingMatch.fullContentText || ''),
+        ...(item.customServices || existingMatch.customServices
+          ? { customServices: item.customServices || existingMatch.customServices }
+          : {}),
         seo: item.seo
           ? {
               metaTitle: item.seo.metaTitle || item.name,
