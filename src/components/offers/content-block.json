@@ -42,6 +42,38 @@
     },
     "paragraphs": {
       "type": "json"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "imageAlt": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "buttonText": {
+      "type": "string"
+    },
+    "buttonHref": {
+      "type": "string"
+    },
+    "noBullets": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasSubscribeForm": {
+      "type": "boolean",
+      "default": false
+    },
+    "stats": {
+      "type": "json"
     }
   }
 }

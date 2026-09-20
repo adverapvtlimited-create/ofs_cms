@@ -13,6 +13,12 @@
     },
     "description": {
       "type": "text"
+    },
+    "image": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
     }
   }
 }

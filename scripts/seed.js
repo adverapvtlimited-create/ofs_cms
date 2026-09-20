@@ -4,6 +4,23 @@ const fs = require("fs");
 const path = require("path");
 const { createStrapi } = require("@strapi/strapi");
 
+function stripIdsAndMeta(obj) {
+  if (!obj || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(stripIdsAndMeta);
+  const copy = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (["id", "documentId", "createdAt", "updatedAt", "publishedAt"].includes(key)) {
+      continue;
+    }
+    if (typeof value === "object" && value !== null) {
+      copy[key] = stripIdsAndMeta(value);
+    } else {
+      copy[key] = value;
+    }
+  }
+  return copy;
+}
+
 async function seed() {
   console.log("🌱 Starting Strapi Data Seeding from OFS/src/data...");
 
@@ -20,9 +37,23 @@ async function seed() {
     console.log("📌 Seeding Site Config...");
     const siteConfigPath = path.join(dataDir, "site-config.json");
     if (fs.existsSync(siteConfigPath)) {
-      const siteConfigData = JSON.parse(
-        fs.readFileSync(siteConfigPath, "utf8"),
-      );
+      const rawSiteConfig = JSON.parse(fs.readFileSync(siteConfigPath, "utf8"));
+      const siteConfigData = {
+        name: rawSiteConfig.name,
+        shortName: rawSiteConfig.shortName,
+        legalName: rawSiteConfig.legalName,
+        usEntityName: rawSiteConfig.usEntityName,
+        tagline: rawSiteConfig.tagline,
+        shortDesc: rawSiteConfig.shortDesc,
+        headline: rawSiteConfig.headline,
+        description: rawSiteConfig.description,
+        longDesc: rawSiteConfig.longDesc,
+        certifications: rawSiteConfig.certifications || [],
+        contact: stripIdsAndMeta(rawSiteConfig.contact),
+        stats: stripIdsAndMeta(rawSiteConfig.stats || []),
+        socials: stripIdsAndMeta(rawSiteConfig.socials),
+      };
+
       const existing = await app
         .documents("api::site-config.site-config")
         .findFirst();
@@ -42,49 +73,6 @@ async function seed() {
       }
     }
 
-    // 2. Services (Collection Type)
-    console.log("📌 Seeding Services...");
-    const servicesPath = path.join(dataDir, "services.json");
-    if (fs.existsSync(servicesPath)) {
-      const services = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
-      for (const item of services) {
-        const payload = {
-          serviceId: item.id,
-          slug: item.slug,
-          title: item.title,
-          shortTitle: item.shortTitle || item.title,
-          badge: item.badge,
-          icon: item.icon,
-          heroImage: item.heroImage,
-          tagline: item.tagline,
-          description: item.description,
-          features: item.features || [],
-          capabilities: item.capabilities || [],
-          process: item.process || [],
-          faqs: item.faqs || [],
-          fullContentText: item.fullContentText || "",
-          scrapedImages: item.scrapedImages || [],
-          seo: item.seo || {},
-        };
-        const existing = await app.documents("api::service.service").findFirst({
-          filters: { serviceId: item.id },
-        });
-        if (!existing) {
-          await app.documents("api::service.service").create({
-            data: payload,
-            status: "published",
-          });
-          console.log(`  ➕ Service: ${item.title}`);
-        } else {
-          await app.documents("api::service.service").update({
-            documentId: existing.documentId,
-            data: payload,
-            status: "published",
-          });
-          console.log(`  🔄 Service: ${item.title}`);
-        }
-      }
-    }
 
     // 3. Products (Collection Type)
     console.log("📌 Seeding Products...");
@@ -99,13 +87,22 @@ async function seed() {
           shortName: item.shortName,
           category: item.category,
           icon: item.icon,
-          heroImage: item.heroImage,
           summary: item.summary,
           keyPoints: item.keyPoints || [],
           description: item.description,
-          catalogItems: item.catalogItems || [],
-          seo: item.seo || {},
+          catalogItems: (item.catalogItems || []).map((c) => ({
+            title: c.title || "Item",
+            description: c.description || c.desc || c.title || "Specification details available on request.",
+          })),
+          seo: item.seo
+            ? {
+                metaTitle: item.seo.metaTitle || item.name,
+                metaDescription: item.seo.metaDescription || item.summary,
+                keywords: item.seo.keywords || "",
+              }
+            : null,
         };
+
         const existing = await app.documents("api::product.product").findFirst({
           filters: { productId: item.id },
         });
@@ -138,10 +135,13 @@ async function seed() {
           name: item.name,
           shortName: item.shortName,
           icon: item.icon,
-          heroImage: item.heroImage,
           relatedService:
             item.relatedService && item.relatedService.slug
-              ? item.relatedService
+              ? {
+                  title: item.relatedService.title || "",
+                  slug: item.relatedService.slug || "",
+                  href: item.relatedService.href || "",
+                }
               : null,
           tagline: item.tagline,
           summary: item.summary,
@@ -152,15 +152,21 @@ async function seed() {
             name: sub.name,
             shortName: sub.shortName,
             icon: sub.icon,
-            heroImage: sub.heroImage,
             tagline: sub.tagline,
             summary: sub.summary,
             keySolutions: sub.keySolutions || [],
             fullContentText: sub.fullContentText,
           })),
           fullContentText: item.fullContentText,
-          seo: item.seo || {},
+          seo: item.seo
+            ? {
+                metaTitle: item.seo.metaTitle || item.name,
+                metaDescription: item.seo.metaDescription || item.summary,
+                keywords: item.seo.keywords || "",
+              }
+            : null,
         };
+
         const existing = await app
           .documents("api::industry.industry")
           .findFirst({
@@ -196,14 +202,23 @@ async function seed() {
           location: item.location,
           badge: item.badge,
           duration: item.duration,
-          heroImage: item.heroImage,
           summary: item.summary,
           challenge: item.challenge,
           solution: item.solution,
-          metrics: item.metrics || [],
+          metrics: (item.metrics || []).map((m) => ({
+            label: m.label || "",
+            value: m.value || "",
+          })),
           tags: item.tags || [],
-          seo: item.seo || {},
+          seo: item.seo
+            ? {
+                metaTitle: item.seo.metaTitle || item.title,
+                metaDescription: item.seo.metaDescription || item.summary,
+                keywords: item.seo.keywords || "",
+              }
+            : null,
         };
+
         const existing = await app
           .documents("api::case-study.case-study")
           .findFirst({
@@ -239,14 +254,25 @@ async function seed() {
           excerpt: item.excerpt,
           content: item.content,
           category: item.category,
-          author: item.author || {},
+          author: item.author
+            ? {
+                name: item.author.name || "",
+                role: item.author.role || "",
+              }
+            : null,
           date: item.date,
           readTime: item.readTime,
           featured: Boolean(item.featured),
-          image: item.image,
           tags: item.tags || [],
-          seo: item.seo || {},
+          seo: item.seo
+            ? {
+                metaTitle: item.seo.metaTitle || item.title,
+                metaDescription: item.seo.metaDescription || item.excerpt,
+                keywords: item.seo.keywords || "",
+              }
+            : null,
         };
+
         const existing = await app
           .documents("api::blog-post.blog-post")
           .findFirst({
@@ -317,14 +343,48 @@ async function seed() {
         fs.readFileSync(renewablesPath, "utf8"),
       );
       const payload = {
-        ...renewablesData,
+        title: renewablesData.title,
+        tagline: renewablesData.tagline,
+        heroDescription: renewablesData.heroDescription || "",
+        heroBacking: renewablesData.heroBacking || "",
+        solutionsTag: renewablesData.solutionsTag || "",
+        solutionsTitle: renewablesData.solutionsTitle || "",
+        solutionsDesc: renewablesData.solutionsDesc || "",
         solutions: (renewablesData.solutions || []).map((s) => ({
           solutionId: s.id,
           title: s.title,
           icon: s.icon,
-          image: s.image,
           bullets: s.bullets || [],
         })),
+        whyTag: renewablesData.whyTag || "",
+        whyTitle: renewablesData.whyTitle || "",
+        whyDesc: renewablesData.whyDesc || "",
+        whyPills: (renewablesData.whyPills || []).map((p) => ({
+          title: p.title,
+          icon: p.icon,
+        })),
+        approachTag: renewablesData.approachTag || "",
+        approachTitle: renewablesData.approachTitle || "",
+        approachSubtitle: renewablesData.approachSubtitle || "",
+        approachSteps: (renewablesData.approachSteps || []).map((step) => ({
+          step: Number(step.step) || 1,
+          title: step.title,
+          desc: step.desc,
+          icon: step.icon,
+        })),
+        partnerTag: renewablesData.partnerTag || "",
+        partnerTitle: renewablesData.partnerTitle || "",
+        partnerDesc: renewablesData.partnerDesc || "",
+        partnerCards: (renewablesData.partnerCards || []).map((c) => ({
+          title: c.title,
+          desc: c.desc,
+          icon: c.icon,
+        })),
+        ctaTag: renewablesData.ctaTag || "",
+        ctaTitle: renewablesData.ctaTitle || "",
+        ctaDesc: renewablesData.ctaDesc || "",
+        contactEmail:
+          renewablesData.contactEmail || "renewables@ofsgroupindia.com",
       };
       const existing = await app
         .documents("api::renewable.renewable")
@@ -356,29 +416,44 @@ async function seed() {
         });
         if (!existing) {
           await app.documents("api::faq.faq").create({
-            data: item,
+            data: { question: item.question, answer: item.answer },
             status: "published",
           });
           console.log(`  ➕ FAQ: ${item.question.slice(0, 40)}...`);
+        } else {
+          await app.documents("api::faq.faq").update({
+            documentId: existing.documentId,
+            data: { question: item.question, answer: item.answer },
+            status: "published",
+          });
         }
       }
     }
 
-    // 10. Offers (Collection Type)
-    console.log("📌 Seeding Offers...");
+    // 10. Offers (Collection Type) - ALL 19 OFFERS
+    console.log("📌 Seeding Offers (19 Offers & Solutions)...");
     const offersPath = path.join(dataDir, "offers.json");
     if (fs.existsSync(offersPath)) {
       const offersObj = JSON.parse(fs.readFileSync(offersPath, "utf8"));
       for (const [key, item] of Object.entries(offersObj)) {
+        const slug = item.slug || key;
         const payload = {
-          slug: item.slug || key,
-          href: item.href,
+          slug: slug,
+          href: item.href || `/${slug}`,
           title: item.title,
-          category: item.category,
-          categoryLabel: item.categoryLabel,
-          heroImage: item.heroImage,
-          tagline: item.tagline,
-          description: item.description,
+          category: item.category || "services",
+          categoryLabel: item.categoryLabel || "Services",
+          heroImageUrl:
+            typeof item.heroImage === "string"
+              ? item.heroImage
+              : item.heroImage?.src || null,
+          tagline: item.tagline || item.title || "",
+          description: item.description || "",
+          overviewTitle: item.overviewTitle || null,
+          overviewParagraphs: item.overviewParagraphs || null,
+          features: item.features || null,
+          sections: item.sections || null,
+          gallery: item.gallery || null,
           blocks: (item.blocks || []).map((b) => ({
             title: b.title || "",
             variant:
@@ -391,18 +466,32 @@ async function seed() {
               b.imagePosition === "left" || b.imagePosition === "right"
                 ? b.imagePosition
                 : "right",
-            image:
-              b.image && b.image.src
-                ? { src: b.image.src, alt: b.image.alt || "" }
+            imageUrl:
+              typeof b.image === "string"
+                ? b.image
+                : b.image && (b.image.src || b.image.url)
+                ? b.image.src || b.image.url
                 : null,
+            imageAlt: (b.image && b.image.alt) || b.title || "",
             intro: b.intro || "",
             items: (b.items || []).map((i) => ({
-              title: i.title || "",
-              description: i.description || "",
+              title: typeof i === "string" ? i : i.title || "",
+              description: typeof i === "string" ? "" : i.description || "",
+              image: (typeof i === "object" && i.image) ? i.image : null,
+              icon: (typeof i === "object" && i.icon) ? i.icon : null,
             })),
             paragraphs: b.paragraphs || [],
+            type: b.type || null,
+            eyebrow: b.eyebrow || null,
+            subtitle: b.subtitle || null,
+            buttonText: b.buttonText || null,
+            buttonHref: b.buttonHref || null,
+            noBullets: Boolean(b.noBullets),
+            hasSubscribeForm: Boolean(b.hasSubscribeForm),
+            stats: b.stats || null,
           })),
         };
+
         const existing = await app.documents("api::offer.offer").findFirst({
           filters: { slug: payload.slug },
         });
@@ -437,7 +526,6 @@ async function seed() {
     if (publicRole) {
       const apis = [
         { uid: "api::site-config.site-config", actions: ["find"] },
-        { uid: "api::service.service", actions: ["find", "findOne"] },
         { uid: "api::product.product", actions: ["find", "findOne"] },
         { uid: "api::industry.industry", actions: ["find", "findOne"] },
         { uid: "api::case-study.case-study", actions: ["find", "findOne"] },

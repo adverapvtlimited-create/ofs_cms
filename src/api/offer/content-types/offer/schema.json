@@ -49,6 +49,24 @@
       "type": "text",
       "required": true
     },
+    "heroImageUrl": {
+      "type": "string"
+    },
+    "overviewTitle": {
+      "type": "string"
+    },
+    "overviewParagraphs": {
+      "type": "json"
+    },
+    "features": {
+      "type": "json"
+    },
+    "sections": {
+      "type": "json"
+    },
+    "gallery": {
+      "type": "json"
+    },
     "blocks": {
       "type": "component",
       "repeatable": true,

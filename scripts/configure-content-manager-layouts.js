@@ -34,24 +34,6 @@ const targetLayouts = {
     list: ['id', 'industryId', 'name', 'shortName', 'slug'],
   },
 
-  // 3. SERVICE
-  'plugin_content_manager_configuration_content_types::api::service.service': {
-    edit: [
-      [{ name: 'serviceId', size: 6 }, { name: 'slug', size: 6 }],
-      [{ name: 'title', size: 6 }, { name: 'shortTitle', size: 6 }],
-      [{ name: 'badge', size: 6 }, { name: 'icon', size: 6 }],
-      [{ name: 'heroImage', size: 6 }, { name: 'tagline', size: 6 }],
-      [{ name: 'description', size: 12 }],
-      [{ name: 'fullContentText', size: 12 }],
-      [{ name: 'features', size: 12 }],
-      [{ name: 'scrapedImages', size: 12 }],
-      [{ name: 'capabilities', size: 12 }],
-      [{ name: 'process', size: 12 }],
-      [{ name: 'faqs', size: 12 }],
-      [{ name: 'seo', size: 12 }],
-    ],
-    list: ['id', 'serviceId', 'title', 'badge', 'slug'],
-  },
 
   // 4. CASE STUDY
   'plugin_content_manager_configuration_content_types::api::case-study.case-study': {
@@ -138,9 +120,15 @@ const targetLayouts = {
     edit: [
       [{ name: 'slug', size: 6 }, { name: 'href', size: 6 }],
       [{ name: 'title', size: 6 }, { name: 'category', size: 6 }],
-      [{ name: 'categoryLabel', size: 6 }, { name: 'heroImage', size: 6 }],
+      [{ name: 'categoryLabel', size: 6 }, { name: 'heroImageUrl', size: 6 }],
+      [{ name: 'heroImage', size: 12 }],
       [{ name: 'tagline', size: 12 }],
+      [{ name: 'overviewTitle', size: 12 }],
       [{ name: 'description', size: 12 }],
+      [{ name: 'overviewParagraphs', size: 12 }],
+      [{ name: 'features', size: 12 }],
+      [{ name: 'sections', size: 12 }],
+      [{ name: 'gallery', size: 12 }],
       [{ name: 'blocks', size: 12 }],
     ],
     list: ['id', 'slug', 'title', 'category'],

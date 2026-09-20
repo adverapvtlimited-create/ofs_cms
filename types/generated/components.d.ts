@@ -92,6 +92,8 @@ export interface OffersBlockItem extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
+    icon: Schema.Attribute.String;
+    image: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -104,13 +106,24 @@ export interface OffersContentBlock extends Struct.ComponentSchema {
     icon: 'layout';
   };
   attributes: {
+    buttonHref: Schema.Attribute.String;
+    buttonText: Schema.Attribute.String;
+    eyebrow: Schema.Attribute.String;
+    hasSubscribeForm: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.Component<'shared.image-with-alt', false>;
+    imageAlt: Schema.Attribute.String;
     imagePosition: Schema.Attribute.Enumeration<['left', 'right']> &
       Schema.Attribute.DefaultTo<'right'>;
+    imageUrl: Schema.Attribute.String;
     intro: Schema.Attribute.Text;
     items: Schema.Attribute.Component<'offers.block-item', true>;
+    noBullets: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     paragraphs: Schema.Attribute.JSON;
+    stats: Schema.Attribute.JSON;
+    subtitle: Schema.Attribute.String;
     title: Schema.Attribute.String;
+    type: Schema.Attribute.String;
     variant: Schema.Attribute.Enumeration<['dark', 'light', 'subtle']> &
       Schema.Attribute.DefaultTo<'light'>;
   };

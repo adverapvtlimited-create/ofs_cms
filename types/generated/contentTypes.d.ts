@@ -739,12 +739,18 @@ export interface ApiOfferOffer extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
+    features: Schema.Attribute.JSON;
+    gallery: Schema.Attribute.JSON;
     heroImage: Schema.Attribute.Media<'images'>;
+    heroImageUrl: Schema.Attribute.String;
     href: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::offer.offer'> &
       Schema.Attribute.Private;
+    overviewParagraphs: Schema.Attribute.JSON;
+    overviewTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sections: Schema.Attribute.JSON;
     slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
@@ -850,52 +856,6 @@ export interface ApiRenewableRenewable extends Struct.SingleTypeSchema {
     whyPills: Schema.Attribute.Component<'renewables.pill', true>;
     whyTag: Schema.Attribute.String;
     whyTitle: Schema.Attribute.String;
-  };
-}
-
-export interface ApiServiceService extends Struct.CollectionTypeSchema {
-  collectionName: 'services';
-  info: {
-    description: 'Industrial procurement, engineering, MRO, and logistics services';
-    displayName: 'Service';
-    pluralName: 'services';
-    singularName: 'service';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    badge: Schema.Attribute.String;
-    capabilities: Schema.Attribute.Component<'services.capability', true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
-    faqs: Schema.Attribute.Component<'shared.faq-item', true>;
-    features: Schema.Attribute.JSON;
-    fullContentText: Schema.Attribute.Text;
-    heroImage: Schema.Attribute.Media<'images'>;
-    icon: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::service.service'
-    > &
-      Schema.Attribute.Private;
-    process: Schema.Attribute.Component<'services.process-step', true>;
-    publishedAt: Schema.Attribute.DateTime;
-    scrapedImages: Schema.Attribute.Media<'images', true>;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
-    serviceId: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    shortTitle: Schema.Attribute.String;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tagline: Schema.Attribute.String & Schema.Attribute.Required;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
   };
 }
 
@@ -1465,7 +1425,6 @@ declare module '@strapi/strapi' {
       'api::offer.offer': ApiOfferOffer;
       'api::product.product': ApiProductProduct;
       'api::renewable.renewable': ApiRenewableRenewable;
-      'api::service.service': ApiServiceService;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
