@@ -1,0 +1,51 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ofs-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ofs_cms
+      POSTGRES_USER: ofs_cms
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+
+    volumes:
+      - ofs_postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - ofs-network
+
+
+  strapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: ofs-strapi
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "127.0.0.1:1337:1337"
+
+    volumes:
+      - ofs_strapi_uploads:/app/public/uploads
+
+    networks:
+      - ofs-network
+
+
+networks:
+  ofs-network:
+    driver: bridge
+
+
+volumes:
+  ofs_postgres_data:
+  ofs_strapi_uploads:
