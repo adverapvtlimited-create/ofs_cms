@@ -463,7 +463,10 @@ async function seed() {
                 ? b.variant
                 : "light",
             imagePosition:
-              b.imagePosition === "left" || b.imagePosition === "right"
+              b.imagePosition === "left" ||
+              b.imagePosition === "right" ||
+              b.imagePosition === "top" ||
+              b.imagePosition === "bottom"
                 ? b.imagePosition
                 : "right",
             imageUrl:
