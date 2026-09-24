@@ -17,12 +17,18 @@ function resolveMediaUrl(media) {
   if (typeof media === 'string') return media;
   return (
     media.url ||
+    media.src?.url ||
+    (typeof media.src === 'string' ? media.src : null) ||
     media.data?.attributes?.url ||
     media.data?.url ||
     media.formats?.large?.url ||
     media.formats?.medium?.url ||
     media.formats?.small?.url ||
     media.formats?.thumbnail?.url ||
+    media.src?.formats?.large?.url ||
+    media.src?.formats?.medium?.url ||
+    media.src?.formats?.small?.url ||
+    media.src?.formats?.thumbnail?.url ||
     null
   );
 }
@@ -36,7 +42,12 @@ async function syncOffers(strapi) {
       populate: {
         heroImage: true,
         blocks: {
-          populate: '*',
+          populate: {
+            image: {
+              populate: '*',
+            },
+            items: true,
+          },
         },
       },
       limit: 100,
@@ -62,7 +73,7 @@ async function syncOffers(strapi) {
       offersMap[slug] = {
         id: slug,
         slug: slug,
-        href: item.href || `/${slug}`,
+        href: item.href || prev.href || `/${slug}`,
         title: item.title || prev.title || '',
         category: item.category || prev.category || 'services',
         categoryLabel: item.categoryLabel || prev.categoryLabel || 'Services',
@@ -76,30 +87,51 @@ async function syncOffers(strapi) {
         gallery: item.gallery !== undefined ? item.gallery : prev.gallery,
         blocks: (item.blocks && item.blocks.length > 0)
           ? item.blocks.map((b, bIdx) => {
-              const prevBlock = prev.blocks?.[bIdx] || {};
-              const resolvedImg = b.imageUrl || resolveMediaUrl(b.image) || (b.image && (b.image.src || b.image.url)) || prevBlock.image?.src || null;
+              const prevBlock =
+                prev.blocks?.find(
+                  (eb) =>
+                    (b.title && eb.title && eb.title.trim().toLowerCase() === b.title.trim().toLowerCase()) ||
+                    (b.type && eb.type && eb.type === b.type)
+                ) || prev.blocks?.[bIdx] || {};
+
+              const strapiImgUrl =
+                resolveMediaUrl(b.image?.src) ||
+                resolveMediaUrl(b.image) ||
+                resolveMediaUrl(b.imageUrl) ||
+                null;
+
+              const existingImgUrl =
+                typeof prevBlock.image === 'string'
+                  ? prevBlock.image
+                  : prevBlock.image?.src || null;
+
+              const finalImgSrc = strapiImgUrl || existingImgUrl || null;
+              const finalImgAlt = b.imageAlt || b.image?.alt || prevBlock.image?.alt || b.title || '';
 
               return {
-                title: b.title || '',
+                title: b.title || prevBlock.title || '',
                 variant: b.variant || prevBlock.variant || 'light',
                 imagePosition: b.imagePosition || prevBlock.imagePosition || 'right',
-                image: resolvedImg
+                image: finalImgSrc
                   ? {
-                      src: resolvedImg,
-                      alt: b.imageAlt || b.image?.alt || b.title || '',
+                      src: finalImgSrc,
+                      alt: finalImgAlt,
                     }
                   : null,
-                intro: b.intro || '',
-                items: (b.items || []).map((i, iIdx) => {
-                  const prevItem = prevBlock.items?.[iIdx] || {};
+                intro: b.intro !== undefined ? b.intro : (prevBlock.intro || ''),
+                items: (b.items && b.items.length > 0 ? b.items : (prevBlock.items || [])).map((i, iIdx) => {
+                  const prevItem =
+                    prevBlock.items?.find(
+                      (pi) => pi.title && i.title && pi.title.trim().toLowerCase() === i.title.trim().toLowerCase()
+                    ) || prevBlock.items?.[iIdx] || {};
                   return {
-                    title: typeof i === 'string' ? i : i.title || '',
-                    description: typeof i === 'string' ? '' : i.description || '',
-                    ...(i.image || prevItem.image ? { image: i.image || prevItem.image } : {}),
-                    ...(i.icon || prevItem.icon ? { icon: i.icon || prevItem.icon } : {}),
+                    title: typeof i === 'string' ? i : i.title || prevItem.title || '',
+                    description: typeof i === 'string' ? '' : i.description || prevItem.description || '',
+                    ...(i.image || prevItem.image ? { image: resolveMediaUrl(i.image) || prevItem.image } : {}),
+                    ...(i.icon || prevItem.icon ? { icon: resolveMediaUrl(i.icon) || prevItem.icon } : {}),
                   };
                 }),
-                paragraphs: b.paragraphs || prevBlock.paragraphs || [],
+                paragraphs: Array.isArray(b.paragraphs) && b.paragraphs.length > 0 ? b.paragraphs : (prevBlock.paragraphs || []),
                 ...(b.type || prevBlock.type ? { type: b.type || prevBlock.type } : {}),
                 ...(b.eyebrow || prevBlock.eyebrow ? { eyebrow: b.eyebrow || prevBlock.eyebrow } : {}),
                 ...(b.subtitle || prevBlock.subtitle ? { subtitle: b.subtitle || prevBlock.subtitle } : {}),
