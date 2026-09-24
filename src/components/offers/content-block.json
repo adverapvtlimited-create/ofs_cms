@@ -23,7 +23,9 @@
       "type": "enumeration",
       "enum": [
         "left",
-        "right"
+        "right",
+        "top",
+        "bottom"
       ],
       "default": "right"
     },

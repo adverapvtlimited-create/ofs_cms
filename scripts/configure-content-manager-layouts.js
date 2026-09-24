@@ -242,10 +242,23 @@ const targetLayouts = {
   'plugin_content_manager_configuration_components::offers.content-block': {
     edit: [
       [{ name: 'title', size: 6 }, { name: 'variant', size: 6 }],
-      [{ name: 'imagePosition', size: 6 }, { name: 'image', size: 6 }],
+      [{ name: 'type', size: 6 }, { name: 'eyebrow', size: 6 }],
+      [{ name: 'subtitle', size: 6 }, { name: 'imagePosition', size: 6 }],
+      [{ name: 'image', size: 6 }, { name: 'imageUrl', size: 6 }],
+      [{ name: 'imageAlt', size: 6 }, { name: 'buttonText', size: 6 }],
+      [{ name: 'buttonHref', size: 6 }, { name: 'noBullets', size: 3 }, { name: 'hasSubscribeForm', size: 3 }],
       [{ name: 'intro', size: 12 }],
       [{ name: 'paragraphs', size: 12 }],
+      [{ name: 'stats', size: 12 }],
       [{ name: 'items', size: 12 }],
+    ],
+  },
+
+  // offers.block-item
+  'plugin_content_manager_configuration_components::offers.block-item': {
+    edit: [
+      [{ name: 'title', size: 6 }, { name: 'image', size: 6 }],
+      [{ name: 'icon', size: 6 }, { name: 'description', size: 6 }],
     ],
   },
 };
