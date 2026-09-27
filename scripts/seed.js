@@ -44,7 +44,7 @@ async function seed() {
         legalName: rawSiteConfig.legalName,
         usEntityName: rawSiteConfig.usEntityName,
         tagline: rawSiteConfig.tagline,
-        shortDesc: rawSiteConfig.shortDesc,
+        shortDesc: rawSiteConfig.shortDesc || "",
         headline: rawSiteConfig.headline,
         description: rawSiteConfig.description,
         longDesc: rawSiteConfig.longDesc,
