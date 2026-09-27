@@ -36,6 +36,7 @@ services:
 
     volumes:
       - ofs_strapi_uploads:/app/public/uploads
+      - /opt/ofs/OFS/src/data:/app/OFS/src/data:ro
 
     networks:
       - ofs-network
