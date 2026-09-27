@@ -6,11 +6,14 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      origin: [
+        origin: [
         'https://ofsgroupindia.in',
         'https://www.ofsgroupindia.in',
-        'https://ofs-git-feat-crm-adverapvtlimited-creates-projects.vercel.app'
-      ],
+        'https://ofs-git-feat-crm-adverapvtlimited-creates-projects.vercel.app',
+        'https://www.ofsworld.com',
+        'https://ofsworls.com',
+        'https://ofs-nine.vercel.app'
+      ],,
       credentials: true,
     },
   },
