@@ -24,7 +24,7 @@ function stripIdsAndMeta(obj) {
 async function seed() {
   console.log("🌱 Starting Strapi Data Seeding from OFS/src/data...");
 
-  const dataDir = path.resolve(__dirname, "../../OFS/src/data");
+  const dataDir = path.resolve(__dirname, "../OFS/src/data");
   if (!fs.existsSync(dataDir)) {
     console.error(`❌ Data directory not found at: ${dataDir}`);
     process.exit(1);
