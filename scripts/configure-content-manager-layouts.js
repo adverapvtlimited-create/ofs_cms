@@ -172,8 +172,31 @@ const targetLayouts = {
   // products.catalog-item
   'plugin_content_manager_configuration_components::products.catalog-item': {
     edit: [
-      [{ name: 'title', size: 6 }, { name: 'image', size: 6 }],
+      [{ name: 'productid', size: 6 }, { name: 'slug', size: 6 }],
+      [{ name: 'title', size: 6 }, { name: 'name', size: 6 }],
+      [{ name: 'shortName', size: 6 }, { name: 'category', size: 6 }],
+      [{ name: 'icon', size: 6 }, { name: 'image', size: 6 }],
+      [{ name: 'heroImage', size: 12 }],
+      [{ name: 'summary', size: 12 }],
       [{ name: 'description', size: 12 }],
+      [{ name: 'keyPoints', size: 12 }],
+      [{ name: 'products', size: 12 }],
+      [{ name: 'seo', size: 12 }],
+    ],
+  },
+
+  // sub-product.sub-products
+  'plugin_content_manager_configuration_components::sub-product.sub-products': {
+    edit: [
+      [{ name: 'productid', size: 6 }, { name: 'slug', size: 6 }],
+      [{ name: 'title', size: 6 }, { name: 'name', size: 6 }],
+      [{ name: 'shortName', size: 6 }, { name: 'category', size: 6 }],
+      [{ name: 'icon', size: 6 }, { name: 'image', size: 6 }],
+      [{ name: 'heroImage', size: 12 }],
+      [{ name: 'summary', size: 12 }],
+      [{ name: 'description', size: 12 }],
+      [{ name: 'keyPoints', size: 12 }],
+      [{ name: 'seo', size: 12 }],
     ],
   },
 
