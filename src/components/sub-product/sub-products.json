@@ -1,0 +1,74 @@
+{
+  "collectionName": "components_sub_product_sub_products",
+  "info": {
+    "displayName": "sub_products",
+    "icon": "shopping-cart",
+    "description": "Sub product details with full specifications"
+  },
+  "options": {},
+  "attributes": {
+    "productid": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "text",
+      "required": true
+    },
+    "title": {
+      "type": "string"
+    },
+    "shortName": {
+      "type": "string",
+      "required": true
+    },
+    "category": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "summary": {
+      "type": "text",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "keyPoints": {
+      "type": "json"
+    },
+    "catalog_items": {
+      "type": "component",
+      "component": "sections.catalog-item",
+      "repeatable": true
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

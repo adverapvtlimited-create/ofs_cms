@@ -158,16 +158,21 @@ async function syncOffers(strapi) {
  */
 async function syncProducts(strapi) {
   try {
-    const documents = await strapi.documents('api::product.product').findMany({
+  const documents = await strapi.documents('api::product.product').findMany({
+  populate: {
+    heroImage: true,
+    catalogItems: {
       populate: {
-        heroImage: true,
-        catalogItems: {
+        image: true,
+        product: {
           populate: '*',
         },
-        seo: true,
       },
-      limit: 100,
-    });
+    },
+    seo: true,
+  },
+  limit: 100,
+});
 
     if (!documents || documents.length === 0) return;
 
@@ -213,9 +218,20 @@ async function syncProducts(strapi) {
             existingCatalogItems[idx] ||
             existingCatalogItems.find((c) => c.title === ci.title) ||
             {};
-          const resolvedImg = resolveMediaUrl(ci.image);
+          const resolvedImg = resolveMediaUrl(ci.image) || resolveMediaUrl(ci.heroImage);
+          const resolvedSubProduct = ci.products
+            ? {
+                ...ci.products,
+                image: resolveMediaUrl(ci.products.image) || resolveMediaUrl(ci.products.heroImage) || ci.products.image || null,
+                heroImage: resolveMediaUrl(ci.products.heroImage) || resolveMediaUrl(ci.products.image) || null,
+              }
+            : existingCi.products || null;
+
           return {
-            title: ci.title || existingCi.title || '',
+            ...existingCi,
+            ...ci,
+            title: ci.title || ci.name || existingCi.title || '',
+            name: ci.name || ci.title || existingCi.name || '',
             image:
               resolvedImg ||
               (typeof ci.image === 'string' && ci.image.startsWith('/') && !ci.image.includes('draw-works.jpg') ? ci.image : null) ||
@@ -223,6 +239,7 @@ async function syncProducts(strapi) {
               existingMatch.heroImage ||
               '/images/products/mud-pumps.webp',
             description: ci.description || existingCi.description || '',
+            products: resolvedSubProduct,
           };
         }),
         seo: item.seo

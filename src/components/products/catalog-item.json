@@ -22,6 +22,11 @@
     "description": {
       "type": "text",
       "required": true
+    },
+    "product": {
+      "type": "component",
+      "component": "sub-product.sub-products",
+      "repeatable": false
     }
   }
 }

@@ -113,7 +113,9 @@ export interface OffersContentBlock extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.Component<'shared.image-with-alt', false>;
     imageAlt: Schema.Attribute.String;
-    imagePosition: Schema.Attribute.Enumeration<['left', 'right']> &
+    imagePosition: Schema.Attribute.Enumeration<
+      ['left', 'right', 'top', 'bottom']
+    > &
       Schema.Attribute.DefaultTo<'right'>;
     imageUrl: Schema.Attribute.String;
     intro: Schema.Attribute.Text;
@@ -139,6 +141,7 @@ export interface ProductsCatalogItem extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     image: Schema.Attribute.Media<'images'>;
+    product: Schema.Attribute.Component<'sub-product.sub-products', false>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -582,6 +585,31 @@ export interface SharedStatMetric extends Struct.ComponentSchema {
   };
 }
 
+export interface SubProductSubProducts extends Struct.ComponentSchema {
+  collectionName: 'components_sub_product_sub_products';
+  info: {
+    description: 'Sub product details with full specifications';
+    displayName: 'sub_products';
+    icon: 'shopping-cart';
+  };
+  attributes: {
+    catalog_items: Schema.Attribute.Component<'sections.catalog-item', true>;
+    category: Schema.Attribute.String;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    heroImage: Schema.Attribute.Media<'images'>;
+    icon: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+    keyPoints: Schema.Attribute.JSON;
+    name: Schema.Attribute.Text & Schema.Attribute.Required;
+    productid: Schema.Attribute.String & Schema.Attribute.Required;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    shortName: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.String & Schema.Attribute.Required;
+    summary: Schema.Attribute.Text & Schema.Attribute.Required;
+    title: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
@@ -616,6 +644,7 @@ declare module '@strapi/strapi' {
       'shared.socials': SharedSocials;
       'shared.stat': SharedStat;
       'shared.stat-metric': SharedStatMetric;
+      'sub-product.sub-products': SubProductSubProducts;
     }
   }
 }
