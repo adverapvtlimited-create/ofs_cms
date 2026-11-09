@@ -158,23 +158,21 @@ async function syncOffers(strapi) {
  */
 async function syncProducts(strapi) {
   try {
-    const documents = await strapi.documents('api::product.product').findMany({
+  const documents = await strapi.documents('api::product.product').findMany({
+  populate: {
+    heroImage: true,
+    catalogItems: {
       populate: {
-        heroImage: true,
-        catalogItems: {
-          populate: {
-            image: true,
-            heroImage: true,
-            products: {
-              populate: '*',
-            },
-            seo: true,
-          },
+        image: true,
+        product: {
+          populate: '*',
         },
-        seo: true,
       },
-      limit: 100,
-    });
+    },
+    seo: true,
+  },
+  limit: 100,
+});
 
     if (!documents || documents.length === 0) return;
 
