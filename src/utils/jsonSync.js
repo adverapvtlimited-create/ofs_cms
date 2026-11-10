@@ -208,7 +208,6 @@ async function syncProducts(strapi) {
             product: {
               populate: {
                 heroImage: true,
-                image: true,
                 catalog_items: {
                   populate: {
                     image: true,
