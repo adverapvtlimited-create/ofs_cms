@@ -3,7 +3,47 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.resolve(__dirname, '../../../OFS/src/data');
+/**
+ * Resolves the target data directory for JSON files.
+ * Checks FRONTEND_DATA_DIR env variable, then known relative and Docker paths.
+ */
+function getDataDir() {
+  if (process.env.FRONTEND_DATA_DIR) {
+    return path.resolve(process.env.FRONTEND_DATA_DIR);
+  }
+  const relativePath = path.resolve(__dirname, '../../../OFS/src/data');
+  if (fs.existsSync(relativePath)) {
+    return relativePath;
+  }
+  const dockerPath = '/app/OFS/src/data';
+  if (fs.existsSync(dockerPath)) {
+    return dockerPath;
+  }
+  const altDockerPath = '/OFS/src/data';
+  if (fs.existsSync(altDockerPath)) {
+    return altDockerPath;
+  }
+  return relativePath;
+}
+
+const DATA_DIR = getDataDir();
+
+/**
+ * Safely writes a JSON file, creating parent directories if they don't exist.
+ */
+function safeWriteJson(filePath, data) {
+  try {
+    const dirname = path.dirname(filePath);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (err) {
+    console.error(`[JSON Sync] ❌ Error writing ${path.basename(filePath)}:`, err.message);
+    return false;
+  }
+}
 
 /**
  * Resolves media object to url string or null
@@ -146,8 +186,9 @@ async function syncOffers(strapi) {
       };
     });
 
-    fs.writeFileSync(offersFilePath, JSON.stringify(offersMap, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} offers to offers.json`);
+    if (safeWriteJson(offersFilePath, offersMap)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} offers to offers.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing offers.json:', err.message);
   }
@@ -158,21 +199,30 @@ async function syncOffers(strapi) {
  */
 async function syncProducts(strapi) {
   try {
-  const documents = await strapi.documents('api::product.product').findMany({
-  populate: {
-    heroImage: true,
-    catalogItems: {
+    const documents = await strapi.documents('api::product.product').findMany({
       populate: {
-        image: true,
-        product: {
-          populate: '*',
+        heroImage: true,
+        catalogItems: {
+          populate: {
+            image: true,
+            product: {
+              populate: {
+                heroImage: true,
+                image: true,
+                catalog_items: {
+                  populate: {
+                    image: true,
+                  },
+                },
+                seo: true,
+              },
+            },
+          },
         },
+        seo: true,
       },
-    },
-    seo: true,
-  },
-  limit: 100,
-});
+      limit: 100,
+    });
 
     if (!documents || documents.length === 0) return;
 
@@ -219,13 +269,33 @@ async function syncProducts(strapi) {
             existingCatalogItems.find((c) => c.title === ci.title) ||
             {};
           const resolvedImg = resolveMediaUrl(ci.image) || resolveMediaUrl(ci.heroImage);
-          const resolvedSubProduct = ci.products
+
+          const rawSubProduct = ci.product || ci.products;
+          const existingSubProduct = existingCi.product || existingCi.products;
+          const resolvedSubProduct = rawSubProduct
             ? {
-                ...ci.products,
-                image: resolveMediaUrl(ci.products.image) || resolveMediaUrl(ci.products.heroImage) || ci.products.image || null,
-                heroImage: resolveMediaUrl(ci.products.heroImage) || resolveMediaUrl(ci.products.image) || null,
+                ...rawSubProduct,
+                image:
+                  resolveMediaUrl(rawSubProduct.image) ||
+                  resolveMediaUrl(rawSubProduct.heroImage) ||
+                  rawSubProduct.image ||
+                  null,
+                heroImage:
+                  resolveMediaUrl(rawSubProduct.heroImage) ||
+                  resolveMediaUrl(rawSubProduct.image) ||
+                  null,
+                catalog_items: Array.isArray(rawSubProduct.catalog_items)
+                  ? rawSubProduct.catalog_items.map((subCi) => ({
+                      ...subCi,
+                      title: subCi.title || '',
+                      description: subCi.description || '',
+                      image: resolveMediaUrl(subCi.image) || subCi.image || null,
+                    }))
+                  : (Array.isArray(existingSubProduct?.catalog_items)
+                      ? existingSubProduct.catalog_items
+                      : []),
               }
-            : existingCi.products || null;
+            : existingSubProduct || null;
 
           return {
             ...existingCi,
@@ -239,6 +309,7 @@ async function syncProducts(strapi) {
               existingMatch.heroImage ||
               '/images/products/mud-pumps.webp',
             description: ci.description || existingCi.description || '',
+            product: resolvedSubProduct,
             products: resolvedSubProduct,
           };
         }),
@@ -254,8 +325,9 @@ async function syncProducts(strapi) {
       };
     });
 
-    fs.writeFileSync(productsFilePath, JSON.stringify(productsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} products to products.json`);
+    if (safeWriteJson(productsFilePath, productsArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} products to products.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing products.json:', err.message);
   }
@@ -354,8 +426,9 @@ async function syncIndustries(strapi) {
       };
     });
 
-    fs.writeFileSync(industriesFilePath, JSON.stringify(industriesArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} industries to industries.json`);
+    if (safeWriteJson(industriesFilePath, industriesArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} industries to industries.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing industries.json:', err.message);
   }
@@ -394,8 +467,9 @@ async function syncCaseStudies(strapi) {
       seo: item.seo || {},
     }));
 
-    fs.writeFileSync(caseStudiesFilePath, JSON.stringify(caseStudiesArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} case studies to case-studies.json`);
+    if (safeWriteJson(caseStudiesFilePath, caseStudiesArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} case studies to case-studies.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing case-studies.json:', err.message);
   }
@@ -440,8 +514,9 @@ async function syncBlogPosts(strapi) {
       seo: item.seo || {},
     }));
 
-    fs.writeFileSync(blogPostsFilePath, JSON.stringify(blogPostsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} blog posts to blog-posts.json`);
+    if (safeWriteJson(blogPostsFilePath, blogPostsArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} blog posts to blog-posts.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing blog-posts.json:', err.message);
   }
@@ -464,8 +539,9 @@ async function syncFaqs(strapi) {
       answer: item.answer,
     }));
 
-    fs.writeFileSync(faqsFilePath, JSON.stringify(faqsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} FAQs to faqs.json`);
+    if (safeWriteJson(faqsFilePath, faqsArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} FAQs to faqs.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing faqs.json:', err.message);
   }
@@ -498,8 +574,9 @@ async function syncJobs(strapi) {
       benefits: item.benefits || [],
     }));
 
-    fs.writeFileSync(jobsFilePath, JSON.stringify(jobsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} career jobs to jobs.json`);
+    if (safeWriteJson(jobsFilePath, jobsArray)) {
+      console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} career jobs to jobs.json`);
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing jobs.json:', err.message);
   }
@@ -570,8 +647,9 @@ async function syncRenewables(strapi) {
       contactEmail: doc.contactEmail || prev.contactEmail || 'renewables@ofsgroupindia.com',
     };
 
-    fs.writeFileSync(renewablesFilePath, JSON.stringify(output, null, 2), 'utf8');
-    console.log('[JSON Sync] ✅ Successfully synchronized renewables.json');
+    if (safeWriteJson(renewablesFilePath, output)) {
+      console.log('[JSON Sync] ✅ Successfully synchronized renewables.json');
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing renewables.json:', err.message);
   }
@@ -628,8 +706,9 @@ async function syncSiteConfig(strapi) {
       certifications: doc.certifications || prev.certifications,
     };
 
-    fs.writeFileSync(siteConfigFilePath, JSON.stringify(output, null, 2), 'utf8');
-    console.log('[JSON Sync] ✅ Successfully synchronized site-config.json');
+    if (safeWriteJson(siteConfigFilePath, output)) {
+      console.log('[JSON Sync] ✅ Successfully synchronized site-config.json');
+    }
   } catch (err) {
     console.error('[JSON Sync] ❌ Error syncing site-config.json:', err.message);
   }
