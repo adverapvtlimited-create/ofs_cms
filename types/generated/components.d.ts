@@ -598,7 +598,6 @@ export interface SubProductSubProducts extends Struct.ComponentSchema {
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     heroImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images'>;
     keyPoints: Schema.Attribute.JSON;
     name: Schema.Attribute.Text & Schema.Attribute.Required;
     productid: Schema.Attribute.String & Schema.Attribute.Required;
@@ -606,7 +605,6 @@ export interface SubProductSubProducts extends Struct.ComponentSchema {
     shortName: Schema.Attribute.String & Schema.Attribute.Required;
     slug: Schema.Attribute.String & Schema.Attribute.Required;
     summary: Schema.Attribute.Text & Schema.Attribute.Required;
-    title: Schema.Attribute.String;
   };
 }
 
