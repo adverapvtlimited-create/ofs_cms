@@ -19,9 +19,6 @@
       "type": "text",
       "required": true
     },
-    "title": {
-      "type": "string"
-    },
     "shortName": {
       "type": "string",
       "required": true
@@ -33,14 +30,6 @@
       "type": "string"
     },
     "heroImage": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ]
-    },
-    "image": {
       "type": "media",
       "multiple": false,
       "required": false,
