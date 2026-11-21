@@ -1,4 +1,7 @@
 const { Client } = require('pg');
+const { createChildLogger } = require('../src/utils/logger');
+
+const cliLogger = createChildLogger('CLI:DeleteDuplicate');
 
 async function main() {
   const client = new Client({
@@ -10,21 +13,24 @@ async function main() {
   });
 
   await client.connect();
-  console.log('Connected to DB');
+  cliLogger.info('Connected to PostgreSQL OFS_cms database');
 
   // Check products
   const res = await client.query("SELECT id, document_id, slug, name FROM products WHERE slug LIKE '%mud%'");
-  console.log('Found products:', res.rows);
+  cliLogger.info({ products: res.rows }, 'Found %d products matching "mud"', res.rows.length);
 
   // Delete duplicate 'mud-pumps-spare-parts'
   const delRes = await client.query("DELETE FROM products WHERE slug = 'mud-pumps-spare-parts'");
-  console.log('Deleted rows:', delRes.rowCount);
+  cliLogger.info({ deletedCount: delRes.rowCount }, 'Deleted %d duplicate rows', delRes.rowCount);
 
   // Check remaining
   const remaining = await client.query("SELECT id, document_id, slug, name FROM products WHERE slug LIKE '%mud%'");
-  console.log('Remaining products:', remaining.rows);
+  cliLogger.info({ remaining: remaining.rows }, 'Remaining products: %d', remaining.rows.length);
 
   await client.end();
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  cliLogger.error({ err }, 'Error deleting duplicate mud pump: %s', err.message);
+  process.exit(1);
+});

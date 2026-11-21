@@ -3,6 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 const { createStrapi } = require("@strapi/strapi");
+const { createChildLogger } = require("../src/utils/logger");
+
+const cliLogger = createChildLogger("CLI:Seed");
 
 function stripIdsAndMeta(obj) {
   if (!obj || typeof obj !== "object") return obj;
@@ -22,11 +25,11 @@ function stripIdsAndMeta(obj) {
 }
 
 async function seed() {
-  console.log("🌱 Starting Strapi Data Seeding from OFS/src/data...");
+  cliLogger.info("Starting Strapi Data Seeding from OFS/src/data...");
 
   const dataDir = path.resolve(__dirname, "../OFS/src/data");
   if (!fs.existsSync(dataDir)) {
-    console.error(`❌ Data directory not found at: ${dataDir}`);
+    cliLogger.error({ dataDir }, "Data directory not found at: %s", dataDir);
     process.exit(1);
   }
 
@@ -34,7 +37,7 @@ async function seed() {
 
   try {
     // 1. Site Config (Single Type)
-    console.log("📌 Seeding Site Config...");
+    cliLogger.info("Seeding Site Config...");
     const siteConfigPath = path.join(dataDir, "site-config.json");
     if (fs.existsSync(siteConfigPath)) {
       const rawSiteConfig = JSON.parse(fs.readFileSync(siteConfigPath, "utf8"));
@@ -62,20 +65,20 @@ async function seed() {
           data: siteConfigData,
           status: "published",
         });
-        console.log("✅ Site Config created");
+        cliLogger.info("Site Config created");
       } else {
         await app.documents("api::site-config.site-config").update({
           documentId: existing.documentId,
           data: siteConfigData,
           status: "published",
         });
-        console.log("🔄 Site Config updated");
+        cliLogger.info("Site Config updated");
       }
     }
 
 
     // 3. Products (Collection Type)
-    console.log("📌 Seeding Products...");
+    cliLogger.info("Seeding Products...");
     const productsPath = path.join(dataDir, "products.json");
     if (fs.existsSync(productsPath)) {
       const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
@@ -111,20 +114,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Product: ${item.shortName}`);
+          cliLogger.info({ product: item.shortName }, "Created Product: %s", item.shortName);
         } else {
           await app.documents("api::product.product").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Product: ${item.shortName}`);
+          cliLogger.info({ product: item.shortName }, "Updated Product: %s", item.shortName);
         }
       }
     }
 
     // 4. Industries (Collection Type)
-    console.log("📌 Seeding Industries...");
+    cliLogger.info("Seeding Industries...");
     const industriesPath = path.join(dataDir, "industries.json");
     if (fs.existsSync(industriesPath)) {
       const industries = JSON.parse(fs.readFileSync(industriesPath, "utf8"));
@@ -177,20 +180,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Industry: ${item.name}`);
+          cliLogger.info({ industry: item.name }, "Created Industry: %s", item.name);
         } else {
           await app.documents("api::industry.industry").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Industry: ${item.name}`);
+          cliLogger.info({ industry: item.name }, "Updated Industry: %s", item.name);
         }
       }
     }
 
     // 5. Case Studies (Collection Type)
-    console.log("📌 Seeding Case Studies...");
+    cliLogger.info("Seeding Case Studies...");
     const caseStudiesPath = path.join(dataDir, "case-studies.json");
     if (fs.existsSync(caseStudiesPath)) {
       const caseStudies = JSON.parse(fs.readFileSync(caseStudiesPath, "utf8"));
@@ -229,20 +232,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Case Study: ${item.title.slice(0, 40)}...`);
+          cliLogger.info({ caseStudy: item.title }, "Created Case Study: %s", item.title.slice(0, 40));
         } else {
           await app.documents("api::case-study.case-study").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Case Study: ${item.title.slice(0, 40)}...`);
+          cliLogger.info({ caseStudy: item.title }, "Updated Case Study: %s", item.title.slice(0, 40));
         }
       }
     }
 
     // 6. Blog Posts (Collection Type)
-    console.log("📌 Seeding Blog Posts...");
+    cliLogger.info("Seeding Blog Posts...");
     const blogPostsPath = path.join(dataDir, "blog-posts.json");
     if (fs.existsSync(blogPostsPath)) {
       const blogPosts = JSON.parse(fs.readFileSync(blogPostsPath, "utf8"));
@@ -283,20 +286,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Blog Post: ${item.title.slice(0, 40)}...`);
+          cliLogger.info({ post: item.title }, "Created Blog Post: %s", item.title.slice(0, 40));
         } else {
           await app.documents("api::blog-post.blog-post").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Blog Post: ${item.title.slice(0, 40)}...`);
+          cliLogger.info({ post: item.title }, "Updated Blog Post: %s", item.title.slice(0, 40));
         }
       }
     }
 
     // 7. Jobs (Collection Type)
-    console.log("📌 Seeding Jobs...");
+    cliLogger.info("Seeding Jobs...");
     const jobsPath = path.join(dataDir, "jobs.json");
     if (fs.existsSync(jobsPath)) {
       const jobs = JSON.parse(fs.readFileSync(jobsPath, "utf8"));
@@ -323,20 +326,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Job: ${item.title}`);
+          cliLogger.info({ job: item.title }, "Created Job: %s", item.title);
         } else {
           await app.documents("api::job.job").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Job: ${item.title}`);
+          cliLogger.info({ job: item.title }, "Updated Job: %s", item.title);
         }
       }
     }
 
     // 8. Renewables (Single Type)
-    console.log("📌 Seeding Renewables...");
+    cliLogger.info("Seeding Renewables...");
     const renewablesPath = path.join(dataDir, "renewables.json");
     if (fs.existsSync(renewablesPath)) {
       const renewablesData = JSON.parse(
@@ -394,19 +397,19 @@ async function seed() {
           data: payload,
           status: "published",
         });
-        console.log("✅ Renewables page created");
+        cliLogger.info("Renewables page created");
       } else {
         await app.documents("api::renewable.renewable").update({
           documentId: existing.documentId,
           data: payload,
           status: "published",
         });
-        console.log("🔄 Renewables page updated");
+        cliLogger.info("Renewables page updated");
       }
     }
 
     // 9. FAQs (Collection Type)
-    console.log("📌 Seeding FAQs...");
+    cliLogger.info("Seeding FAQs...");
     const faqsPath = path.join(dataDir, "faqs.json");
     if (fs.existsSync(faqsPath)) {
       const faqs = JSON.parse(fs.readFileSync(faqsPath, "utf8"));
@@ -419,7 +422,7 @@ async function seed() {
             data: { question: item.question, answer: item.answer },
             status: "published",
           });
-          console.log(`  ➕ FAQ: ${item.question.slice(0, 40)}...`);
+          cliLogger.info({ faq: item.question }, "Created FAQ: %s", item.question.slice(0, 40));
         } else {
           await app.documents("api::faq.faq").update({
             documentId: existing.documentId,
@@ -431,7 +434,7 @@ async function seed() {
     }
 
     // 10. Offers (Collection Type) - ALL 19 OFFERS
-    console.log("📌 Seeding Offers (19 Offers & Solutions)...");
+    cliLogger.info("Seeding Offers (19 Offers & Solutions)...");
     const offersPath = path.join(dataDir, "offers.json");
     if (fs.existsSync(offersPath)) {
       const offersObj = JSON.parse(fs.readFileSync(offersPath, "utf8"));
@@ -503,22 +506,20 @@ async function seed() {
             data: payload,
             status: "published",
           });
-          console.log(`  ➕ Offer: ${item.title}`);
+          cliLogger.info({ offer: item.title }, "Created Offer: %s", item.title);
         } else {
           await app.documents("api::offer.offer").update({
             documentId: existing.documentId,
             data: payload,
             status: "published",
           });
-          console.log(`  🔄 Offer: ${item.title}`);
+          cliLogger.info({ offer: item.title }, "Updated Offer: %s", item.title);
         }
       }
     }
 
     // 11. Set Public Permissions so Next.js Frontend can fetch without auth
-    console.log(
-      "🔐 Configuring Public API Permissions for all 10 endpoints...",
-    );
+    cliLogger.info("Configuring Public API Permissions for all 10 endpoints...");
     const publicRole = await app
       .documents("plugin::users-permissions.role")
       .findFirst({
@@ -557,21 +558,18 @@ async function seed() {
           }
         }
       }
-      console.log("✅ Public permissions granted");
+      cliLogger.info("Public permissions granted");
     }
 
-    console.log("\n🎉 ALL OFS STRAPI DATA SUCCESSFULLY SEEDED & VERIFIED!");
+    cliLogger.info("All OFS Strapi data successfully seeded & verified!");
   } catch (err) {
-    console.error("❌ Seeding error:", err);
-    if (err.details) {
-      console.error(
-        "📋 Validation Details:",
-        JSON.stringify(err.details, null, 2),
-      );
-    }
+    cliLogger.error({ err, details: err.details }, "Seeding error: %s", err.message);
+    process.exitCode = 1;
   } finally {
-    await app.destroy();
-    process.exit(0);
+    if (app) {
+      await app.destroy();
+    }
+    process.exit(process.exitCode || 0);
   }
 }
 

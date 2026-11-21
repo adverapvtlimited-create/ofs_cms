@@ -2,7 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const { createChildLogger } = require('./logger');
 
+const syncLogger = createChildLogger('JSONSync');
 const DATA_DIR = path.resolve(__dirname, '../../../OFS/src/data');
 
 /**
@@ -37,6 +39,7 @@ function resolveMediaUrl(media) {
  * Syncs Strapi api::offer.offer entries to OFS/src/data/offers.json
  */
 async function syncOffers(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::offer.offer').findMany({
       populate: {
@@ -53,14 +56,19 @@ async function syncOffers(strapi) {
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No offer documents found in Strapi to sync');
+      return;
+    }
 
     const offersFilePath = path.join(DATA_DIR, 'offers.json');
     let existingOffers = {};
     if (fs.existsSync(offersFilePath)) {
       try {
         existingOffers = JSON.parse(fs.readFileSync(offersFilePath, 'utf8'));
-      } catch {}
+      } catch (parseErr) {
+        syncLogger.warn({ err: parseErr, file: offersFilePath }, 'Failed to parse existing offers.json; will overwrite');
+      }
     }
 
     const offersMap = { ...existingOffers };
@@ -147,9 +155,19 @@ async function syncOffers(strapi) {
     });
 
     fs.writeFileSync(offersFilePath, JSON.stringify(offersMap, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} offers to offers.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'offers.json' },
+      'Successfully synchronized %d offers to offers.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing offers.json:', err.message);
+    syncLogger.error(
+      { err, file: 'offers.json', durationMs: Date.now() - startTime },
+      'Error syncing offers.json: %s',
+      err.message
+    );
   }
 }
 
@@ -157,6 +175,7 @@ async function syncOffers(strapi) {
  * Syncs Strapi api::product.product entries to OFS/src/data/products.json
  */
 async function syncProducts(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::product.product').findMany({
       populate: {
@@ -176,14 +195,19 @@ async function syncProducts(strapi) {
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No product documents found in Strapi to sync');
+      return;
+    }
 
     const productsFilePath = path.join(DATA_DIR, 'products.json');
     let existingProducts = [];
     if (fs.existsSync(productsFilePath)) {
       try {
         existingProducts = JSON.parse(fs.readFileSync(productsFilePath, 'utf8'));
-      } catch {}
+      } catch (parseErr) {
+        syncLogger.warn({ err: parseErr, file: productsFilePath }, 'Failed to parse existing products.json; will overwrite');
+      }
     }
 
     const productsArray = documents.map((item) => {
@@ -257,9 +281,19 @@ async function syncProducts(strapi) {
     });
 
     fs.writeFileSync(productsFilePath, JSON.stringify(productsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} products to products.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'products.json' },
+      'Successfully synchronized %d products to products.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing products.json:', err.message);
+    syncLogger.error(
+      { err, file: 'products.json', durationMs: Date.now() - startTime },
+      'Error syncing products.json: %s',
+      err.message
+    );
   }
 }
 
@@ -267,6 +301,7 @@ async function syncProducts(strapi) {
  * Syncs Strapi api::industry.industry entries to OFS/src/data/industries.json
  */
 async function syncIndustries(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::industry.industry').findMany({
       populate: {
@@ -280,14 +315,19 @@ async function syncIndustries(strapi) {
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No industry documents found in Strapi to sync');
+      return;
+    }
 
     const industriesFilePath = path.join(DATA_DIR, 'industries.json');
     let existingIndustries = [];
     if (fs.existsSync(industriesFilePath)) {
       try {
         existingIndustries = JSON.parse(fs.readFileSync(industriesFilePath, 'utf8'));
-      } catch {}
+      } catch (parseErr) {
+        syncLogger.warn({ err: parseErr, file: industriesFilePath }, 'Failed to parse existing industries.json; will overwrite');
+      }
     }
 
     const industriesArray = documents.map((item) => {
@@ -357,9 +397,19 @@ async function syncIndustries(strapi) {
     });
 
     fs.writeFileSync(industriesFilePath, JSON.stringify(industriesArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} industries to industries.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'industries.json' },
+      'Successfully synchronized %d industries to industries.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing industries.json:', err.message);
+    syncLogger.error(
+      { err, file: 'industries.json', durationMs: Date.now() - startTime },
+      'Error syncing industries.json: %s',
+      err.message
+    );
   }
 }
 
@@ -367,6 +417,7 @@ async function syncIndustries(strapi) {
  * Syncs Strapi api::case-study.case-study entries to OFS/src/data/case-studies.json
  */
 async function syncCaseStudies(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::case-study.case-study').findMany({
       populate: {
@@ -377,7 +428,10 @@ async function syncCaseStudies(strapi) {
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No case study documents found in Strapi to sync');
+      return;
+    }
 
     const caseStudiesFilePath = path.join(DATA_DIR, 'case-studies.json');
     const caseStudiesArray = documents.map((item) => ({
@@ -397,9 +451,19 @@ async function syncCaseStudies(strapi) {
     }));
 
     fs.writeFileSync(caseStudiesFilePath, JSON.stringify(caseStudiesArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} case studies to case-studies.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'case-studies.json' },
+      'Successfully synchronized %d case studies to case-studies.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing case-studies.json:', err.message);
+    syncLogger.error(
+      { err, file: 'case-studies.json', durationMs: Date.now() - startTime },
+      'Error syncing case-studies.json: %s',
+      err.message
+    );
   }
 }
 
@@ -407,6 +471,7 @@ async function syncCaseStudies(strapi) {
  * Syncs Strapi api::blog-post.blog-post entries to OFS/src/data/blog-posts.json
  */
 async function syncBlogPosts(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::blog-post.blog-post').findMany({
       populate: {
@@ -419,7 +484,10 @@ async function syncBlogPosts(strapi) {
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No blog post documents found in Strapi to sync');
+      return;
+    }
 
     const blogPostsFilePath = path.join(DATA_DIR, 'blog-posts.json');
     const blogPostsArray = documents.map((item) => ({
@@ -443,9 +511,19 @@ async function syncBlogPosts(strapi) {
     }));
 
     fs.writeFileSync(blogPostsFilePath, JSON.stringify(blogPostsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} blog posts to blog-posts.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'blog-posts.json' },
+      'Successfully synchronized %d blog posts to blog-posts.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing blog-posts.json:', err.message);
+    syncLogger.error(
+      { err, file: 'blog-posts.json', durationMs: Date.now() - startTime },
+      'Error syncing blog-posts.json: %s',
+      err.message
+    );
   }
 }
 
@@ -453,12 +531,16 @@ async function syncBlogPosts(strapi) {
  * Syncs Strapi api::faq.faq entries to OFS/src/data/faqs.json
  */
 async function syncFaqs(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::faq.faq').findMany({
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No FAQ documents found in Strapi to sync');
+      return;
+    }
 
     const faqsFilePath = path.join(DATA_DIR, 'faqs.json');
     const faqsArray = documents.map((item) => ({
@@ -467,9 +549,19 @@ async function syncFaqs(strapi) {
     }));
 
     fs.writeFileSync(faqsFilePath, JSON.stringify(faqsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} FAQs to faqs.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'faqs.json' },
+      'Successfully synchronized %d FAQs to faqs.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing faqs.json:', err.message);
+    syncLogger.error(
+      { err, file: 'faqs.json', durationMs: Date.now() - startTime },
+      'Error syncing faqs.json: %s',
+      err.message
+    );
   }
 }
 
@@ -477,12 +569,16 @@ async function syncFaqs(strapi) {
  * Syncs Strapi api::job.job entries to OFS/src/data/jobs.json
  */
 async function syncJobs(strapi) {
+  const startTime = Date.now();
   try {
     const documents = await strapi.documents('api::job.job').findMany({
       limit: 100,
     });
 
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) {
+      syncLogger.debug('No career job documents found in Strapi to sync');
+      return;
+    }
 
     const jobsFilePath = path.join(DATA_DIR, 'jobs.json');
     const jobsArray = documents.map((item) => ({
@@ -501,9 +597,19 @@ async function syncJobs(strapi) {
     }));
 
     fs.writeFileSync(jobsFilePath, JSON.stringify(jobsArray, null, 2), 'utf8');
-    console.log(`[JSON Sync] ✅ Successfully synchronized ${documents.length} career jobs to jobs.json`);
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { count: documents.length, durationMs, file: 'jobs.json' },
+      'Successfully synchronized %d career jobs to jobs.json (%dms)',
+      documents.length,
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing jobs.json:', err.message);
+    syncLogger.error(
+      { err, file: 'jobs.json', durationMs: Date.now() - startTime },
+      'Error syncing jobs.json: %s',
+      err.message
+    );
   }
 }
 
@@ -511,6 +617,7 @@ async function syncJobs(strapi) {
  * Syncs Strapi api::renewable.renewable to OFS/src/data/renewables.json
  */
 async function syncRenewables(strapi) {
+  const startTime = Date.now();
   try {
     const doc = await strapi.documents('api::renewable.renewable').findFirst({
       populate: {
@@ -526,14 +633,19 @@ async function syncRenewables(strapi) {
       },
     });
 
-    if (!doc) return;
+    if (!doc) {
+      syncLogger.debug('No renewable singleton document found in Strapi to sync');
+      return;
+    }
 
     const renewablesFilePath = path.join(DATA_DIR, 'renewables.json');
     let prev = {};
     if (fs.existsSync(renewablesFilePath)) {
       try {
         prev = JSON.parse(fs.readFileSync(renewablesFilePath, 'utf8'));
-      } catch {}
+      } catch (parseErr) {
+        syncLogger.warn({ err: parseErr, file: renewablesFilePath }, 'Failed to parse existing renewables.json; will overwrite');
+      }
     }
 
     const output = {
@@ -573,9 +685,18 @@ async function syncRenewables(strapi) {
     };
 
     fs.writeFileSync(renewablesFilePath, JSON.stringify(output, null, 2), 'utf8');
-    console.log('[JSON Sync] ✅ Successfully synchronized renewables.json');
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { durationMs, file: 'renewables.json' },
+      'Successfully synchronized renewables.json (%dms)',
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing renewables.json:', err.message);
+    syncLogger.error(
+      { err, file: 'renewables.json', durationMs: Date.now() - startTime },
+      'Error syncing renewables.json: %s',
+      err.message
+    );
   }
 }
 
@@ -583,6 +704,7 @@ async function syncRenewables(strapi) {
  * Syncs Strapi api::site-config.site-config to OFS/src/data/site-config.json
  */
 async function syncSiteConfig(strapi) {
+  const startTime = Date.now();
   try {
     const doc = await strapi.documents('api::site-config.site-config').findFirst({
       populate: {
@@ -600,14 +722,19 @@ async function syncSiteConfig(strapi) {
       },
     });
 
-    if (!doc) return;
+    if (!doc) {
+      syncLogger.debug('No site-config singleton document found in Strapi to sync');
+      return;
+    }
 
     const siteConfigFilePath = path.join(DATA_DIR, 'site-config.json');
     let prev = {};
     if (fs.existsSync(siteConfigFilePath)) {
       try {
         prev = JSON.parse(fs.readFileSync(siteConfigFilePath, 'utf8'));
-      } catch {}
+      } catch (parseErr) {
+        syncLogger.warn({ err: parseErr, file: siteConfigFilePath }, 'Failed to parse existing site-config.json; will overwrite');
+      }
     }
 
     const output = {
@@ -631,9 +758,18 @@ async function syncSiteConfig(strapi) {
     };
 
     fs.writeFileSync(siteConfigFilePath, JSON.stringify(output, null, 2), 'utf8');
-    console.log('[JSON Sync] ✅ Successfully synchronized site-config.json');
+    const durationMs = Date.now() - startTime;
+    syncLogger.info(
+      { durationMs, file: 'site-config.json' },
+      'Successfully synchronized site-config.json (%dms)',
+      durationMs
+    );
   } catch (err) {
-    console.error('[JSON Sync] ❌ Error syncing site-config.json:', err.message);
+    syncLogger.error(
+      { err, file: 'site-config.json', durationMs: Date.now() - startTime },
+      'Error syncing site-config.json: %s',
+      err.message
+    );
   }
 }
 
@@ -641,8 +777,10 @@ async function syncSiteConfig(strapi) {
  * Master sync function for all content types
  */
 async function syncAllToJson(strapi) {
-  console.log('[JSON Sync] 🔄 Starting full Strapi -> JSON synchronization...');
-  await Promise.allSettled([
+  const masterStart = Date.now();
+  syncLogger.info('Starting full Strapi -> JSON synchronization...');
+
+  const results = await Promise.allSettled([
     syncOffers(strapi),
     syncProducts(strapi),
     syncIndustries(strapi),
@@ -653,7 +791,22 @@ async function syncAllToJson(strapi) {
     syncRenewables(strapi),
     syncSiteConfig(strapi),
   ]);
-  console.log('[JSON Sync] 🎉 All JSON files updated from Strapi.');
+
+  const rejected = results.filter((r) => r.status === 'rejected');
+  if (rejected.length > 0) {
+    syncLogger.error(
+      { rejectedCount: rejected.length, reasons: rejected.map((r) => r.reason?.message || r.reason) },
+      '%d sync operations encountered errors during full synchronization',
+      rejected.length
+    );
+  } else {
+    const totalDurationMs = Date.now() - masterStart;
+    syncLogger.info(
+      { durationMs: totalDurationMs },
+      'All JSON files updated from Strapi successfully (%dms)',
+      totalDurationMs
+    );
+  }
 }
 
 /**
@@ -662,6 +815,7 @@ async function syncAllToJson(strapi) {
 async function handleDocumentChange(strapi, uid) {
   if (!uid) return;
   const normalizedUid = String(uid).toLowerCase();
+  syncLogger.debug({ uid: normalizedUid }, 'Processing document change event');
 
   if (normalizedUid.includes('offer')) {
     await syncOffers(strapi);
@@ -681,6 +835,8 @@ async function handleDocumentChange(strapi, uid) {
     await syncRenewables(strapi);
   } else if (normalizedUid.includes('site-config') || normalizedUid.includes('siteconfig')) {
     await syncSiteConfig(strapi);
+  } else {
+    syncLogger.debug({ uid: normalizedUid }, 'Document UID does not match any registered JSON sync handlers');
   }
 }
 
