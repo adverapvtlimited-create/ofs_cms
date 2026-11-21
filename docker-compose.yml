@@ -25,6 +25,9 @@ services:
     container_name: ofs-strapi
     restart: unless-stopped
 
+    environment:
+      FRONTEND_DATA_DIR: /app/OFS/src/data
+
     env_file:
       - .env
 
@@ -36,7 +39,7 @@ services:
 
     volumes:
       - ofs_strapi_uploads:/app/public/uploads
-      - /opt/ofs/OFS/src/data:/app/OFS/src/data:ro
+      - /opt/ofs/OFS/src/data:/app/OFS/src/data
 
     networks:
       - ofs-network

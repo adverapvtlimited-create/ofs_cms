@@ -177,21 +177,29 @@ async function syncOffers(strapi) {
 async function syncProducts(strapi) {
   const startTime = Date.now();
   try {
-  const documents = await strapi.documents('api::product.product').findMany({
-  populate: {
-    heroImage: true,
-    catalogItems: {
+    const documents = await strapi.documents('api::product.product').findMany({
       populate: {
-        image: true,
-        product: {
-          populate: '*',
+        heroImage: true,
+        catalogItems: {
+          populate: {
+            image: true,
+            product: {
+              populate: {
+                heroImage: true,
+                catalog_items: {
+                  populate: {
+                    image: true,
+                  },
+                },
+                seo: true,
+              },
+            },
+          },
         },
+        seo: true,
       },
-    },
-    seo: true,
-  },
-  limit: 100,
-});
+      limit: 100,
+    });
 
     if (!documents || documents.length === 0) {
       syncLogger.debug('No product documents found in Strapi to sync');
@@ -243,13 +251,33 @@ async function syncProducts(strapi) {
             existingCatalogItems.find((c) => c.title === ci.title) ||
             {};
           const resolvedImg = resolveMediaUrl(ci.image) || resolveMediaUrl(ci.heroImage);
-          const resolvedSubProduct = ci.products
+
+          const rawSubProduct = ci.product || ci.products;
+          const existingSubProduct = existingCi.product || existingCi.products;
+          const resolvedSubProduct = rawSubProduct
             ? {
-                ...ci.products,
-                image: resolveMediaUrl(ci.products.image) || resolveMediaUrl(ci.products.heroImage) || ci.products.image || null,
-                heroImage: resolveMediaUrl(ci.products.heroImage) || resolveMediaUrl(ci.products.image) || null,
+                ...rawSubProduct,
+                image:
+                  resolveMediaUrl(rawSubProduct.image) ||
+                  resolveMediaUrl(rawSubProduct.heroImage) ||
+                  rawSubProduct.image ||
+                  null,
+                heroImage:
+                  resolveMediaUrl(rawSubProduct.heroImage) ||
+                  resolveMediaUrl(rawSubProduct.image) ||
+                  null,
+                catalog_items: Array.isArray(rawSubProduct.catalog_items)
+                  ? rawSubProduct.catalog_items.map((subCi) => ({
+                      ...subCi,
+                      title: subCi.title || '',
+                      description: subCi.description || '',
+                      image: resolveMediaUrl(subCi.image) || subCi.image || null,
+                    }))
+                  : (Array.isArray(existingSubProduct?.catalog_items)
+                      ? existingSubProduct.catalog_items
+                      : []),
               }
-            : existingCi.products || null;
+            : existingSubProduct || null;
 
           return {
             ...existingCi,
@@ -263,6 +291,7 @@ async function syncProducts(strapi) {
               existingMatch.heroImage ||
               '/images/products/mud-pumps.webp',
             description: ci.description || existingCi.description || '',
+            product: resolvedSubProduct,
             products: resolvedSubProduct,
           };
         }),
