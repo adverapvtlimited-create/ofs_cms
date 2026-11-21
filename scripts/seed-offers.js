@@ -3,6 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 const { createStrapi } = require("@strapi/strapi");
+const { createChildLogger } = require("../src/utils/logger");
+
+const cliLogger = createChildLogger("CLI:SeedOffers");
 
 function formatBlocks(blocks) {
   if (!blocks || !Array.isArray(blocks)) return [];
@@ -43,20 +46,21 @@ function formatBlocks(blocks) {
 }
 
 async function seedOffers() {
-  console.log("🌱 Starting Strapi Seeding for all Offers (offers.json)...");
+  cliLogger.info("Starting Strapi Seeding for all Offers (offers.json)...");
 
   const dataDir = path.resolve(__dirname, "../../OFS/src/data");
   const offersPath = path.join(dataDir, "offers.json");
 
   if (!fs.existsSync(offersPath)) {
-    console.error(`❌ offers.json not found at: ${offersPath}`);
+    cliLogger.error({ path: offersPath }, "offers.json not found at expected path");
     process.exit(1);
   }
 
   const offersObj = JSON.parse(fs.readFileSync(offersPath, "utf8"));
-  const app = await createStrapi().load();
+  let app;
 
   try {
+    app = await createStrapi().load();
     let createdCount = 0;
     let updatedCount = 0;
 
@@ -91,7 +95,7 @@ async function seedOffers() {
           data: payload,
           status: "published",
         });
-        console.log(`  ➕ Created Offer: [${slug}] ${item.title}`);
+        cliLogger.info({ slug, title: item.title }, "Created Offer: [%s] %s", slug, item.title);
         createdCount++;
       } else {
         await app.documents("api::offer.offer").update({
@@ -99,12 +103,18 @@ async function seedOffers() {
           data: payload,
           status: "published",
         });
-        console.log(`  🔄 Updated Offer: [${slug}] ${item.title}`);
+        cliLogger.info({ slug, title: item.title }, "Updated Offer: [%s] %s", slug, item.title);
         updatedCount++;
       }
     }
 
-    console.log(`\n🎉 SEED COMPLETED: ${createdCount} created, ${updatedCount} updated. Total: ${Object.keys(offersObj).length}`);
+    cliLogger.info(
+      { created: createdCount, updated: updatedCount, total: Object.keys(offersObj).length },
+      "Offer seeding completed: %d created, %d updated. Total: %d",
+      createdCount,
+      updatedCount,
+      Object.keys(offersObj).length
+    );
 
     // Ensure Public Permissions
     const publicRole = await app
@@ -126,18 +136,18 @@ async function seedOffers() {
               enabled: true,
             },
           });
-          console.log(`  🔑 Granted permission: ${actionKey}`);
+          cliLogger.info({ action: actionKey }, "Granted public permission: %s", actionKey);
         }
       }
     }
   } catch (err) {
-    console.error("❌ Seeding Error:", err);
-    if (err.details) {
-      console.error("📋 Details:", JSON.stringify(err.details, null, 2));
-    }
+    cliLogger.error({ err, details: err.details }, "Seeding Error: %s", err.message);
+    process.exitCode = 1;
   } finally {
-    await app.destroy();
-    process.exit(0);
+    if (app) {
+      await app.destroy();
+    }
+    process.exit(process.exitCode || 0);
   }
 }
 
