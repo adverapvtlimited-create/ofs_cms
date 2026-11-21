@@ -1,4 +1,7 @@
 const { Client } = require('pg');
+const { createChildLogger } = require('../src/utils/logger');
+
+const cliLogger = createChildLogger('CLI:Layout');
 
 const targetLayouts = {
   // 1. PRODUCT
@@ -296,7 +299,7 @@ async function main() {
   });
 
   await client.connect();
-  console.log('Connected to PostgreSQL OFS_cms database.');
+  cliLogger.info('Connected to PostgreSQL OFS_cms database.');
 
   for (const [key, layout] of Object.entries(targetLayouts)) {
     const res = await client.query(
@@ -316,14 +319,17 @@ async function main() {
         'UPDATE strapi_core_store_settings SET value = $1 WHERE key = $2',
         [JSON.stringify(config), key]
       );
-      console.log(`✅ Updated layout for: ${key}`);
+      cliLogger.info({ key }, 'Updated layout configuration for: %s', key);
     } else {
-      console.log(`ℹ️ Key not found in DB (will be created by Strapi if accessed): ${key}`);
+      cliLogger.debug({ key }, 'Key not found in DB (will be created by Strapi if accessed): %s', key);
     }
   }
 
   await client.end();
-  console.log('\n🎉 ALL CONTENT MANAGER LAYOUTS RECONFIGURED ACCORDING TO DATA STRUCTURE!');
+  cliLogger.info('All content manager layouts reconfigured according to data structure!');
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  cliLogger.error({ err }, 'Failed to configure content manager layouts: %s', err.message);
+  process.exit(1);
+});
