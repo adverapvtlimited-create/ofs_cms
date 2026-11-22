@@ -1,5 +1,8 @@
 'use strict';
 
+// Ensure OpenTelemetry SDK is initialized before logger and application modules
+require('../instrumentation');
+
 const logger = require('./utils/logger');
 const { createChildLogger, initProcessHandlers } = require('./utils/logger');
 const { handleDocumentChange } = require('./utils/jsonSync');
@@ -125,7 +128,14 @@ module.exports = {
    * An asynchronous destroy function that runs before
    * your application gets terminated.
    */
-  destroy({ strapi }) {
+  async destroy({ strapi }) {
     appLogger.info('Strapi application shutting down gracefully.');
+    if (global.__OTEL_SDK__) {
+      try {
+        await global.__OTEL_SDK__.shutdown();
+      } catch (err) {
+        // Ignore shutdown error if already closed
+      }
+    }
   },
 };
