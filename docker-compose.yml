@@ -27,6 +27,8 @@ services:
 
     env_file:
       - .env
+    environment:
+      NODE_OPTIONS: "--require ./instrumentation.js"
 
     depends_on:
       - postgres
