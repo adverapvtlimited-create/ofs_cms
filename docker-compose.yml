@@ -27,11 +27,11 @@ services:
 
     environment:
       FRONTEND_DATA_DIR: /app/OFS/src/data
+      NODE_OPTIONS: "--require ./instrumentation.js"
 
     env_file:
       - .env
-    environment:
-      NODE_OPTIONS: "--require ./instrumentation.js"
+    
 
     depends_on:
       - postgres
